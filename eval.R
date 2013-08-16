@@ -63,7 +63,7 @@ timeData <- function(D) {
 ecdfData <- function(D, what, asLog, sameLen) {
   
   scatterPlot=FALSE
-  yMax <- 0.8
+  yMax <- 1 #0.8
   
   valMax <- 0
   valMin <- Inf
@@ -172,15 +172,17 @@ ecdfData <- function(D, what, asLog, sameLen) {
 D <- read.table("tmp.data", header=TRUE)
 
 S <- D$GRP==0
-#S <- S | D$GRP==1 
-#S <- S | D$GRP==2
-S <- S | D$GRP==3
+S <- S | D$GRP==1                # mobile_node0 
+S <- S | D$GRP==2                # mobile_node1 
+S <- S | D$GRP==3                # mobile_running_test0
+S <- S | (D$GRP>=4 & D$GRP<=21)  # random_ping_test0
+S <- S | (D$GRP>=22 & D$GRP<=28) # random_ping_test1
 
 D <- data.frame( PROTO=D[["PROTO"]][S] , RTT=D[["RTT"]][S], TTL=D[["TTL"]][S] )
 
 D$HOPS <- ( max( D$TTL[!is.na(D$TTL)] ) +1 ) - D$TTL
-ecdfData(D,"RTT","x", TRUE)
-#ecdfData(D,"HOPS","", TRUE)
+ecdfData(D,"RTT","x", FALSE)
+#ecdfData(D,"HOPS","", FALSE)
 
 #timeData(D)
 

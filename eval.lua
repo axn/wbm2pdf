@@ -53,23 +53,26 @@ local in_failure_keyword="ping: sendmsg: Network is unreachable"
 
 local min_pings=400
 
-
+local MAX_TTL=64
 
 local out_data_fd=io.open(out_data_file,"w+")
-out_data_fd:write("SEQ PROTO NODE RTT TTL GRP EXP LOGFILE".."\n")
+local data_hdr_format="%6s %8s %4s %4s %8s %6s %4s %4s\n"
+local data_lin_format="%6s %8s %4s %4s %8s %6s %4s %4s\n"
+
+out_data_fd:write(string.format(data_hdr_format,
+		  "SEQ", "PROTO", "EXP", "NODE", "GRP", "RTT", "TTL", "HOPS"))
+
 
 local out_stat_fd=io.open(out_stat_file,"w+")
-
-
-local stat_hdr_format="%-7s %3s %-6s %-3s %-4s  %4s %4s %4s %5s %7s %6s %6s %6s %4s %3s %4s %6s %6s %6s %6s %6s %s \n"
-local stat_lin_format="%-7s %3s %-6s %-3s %-4s  %4s %4s %4s %5s %7s %6s %6d %6s %4s %3s %4s %6s %6.2f %6s %6s %6.1f %s \n"
+local stat_hdr_format="%-7s %3s %-6s %-3s %-4s  %4s %4s %4s %5s %7s %6s %6s %6s %4s %3s %4s %6s %6s %6s %6s %6s %s\n"
+local stat_lin_format="%-7s %3s %-6s %-3s %-4s  %4s %4s %4s %5s %7s %6s %6d %6s %4s %3s %4s %6s %6.2f %6s %6s %6.1f %s\n"
 
 out_stat_fd:write(string.format(stat_hdr_format,
 		  "PROTO", "EXP", "NODE", "GRP", "SIZE", --"ADDR",
 		  "SEND", "RCVD", "LOSS", "TIME",
 		  "maxTime", "minSeq", "maxSeq",
-		  "MAXSEQ", "UNIQ", "DUP", "REOR",
-		  "TTLMIN", "TTLAVG", "RTTMIN", "RTTMAX", "RTTAVG", "LOGFILE"))
+		  "SEQMAX", "UNIQ", "DUP", "REOR",
+		  "HOPMAX", "HOPAVG", "RTTMIN", "RTTMAX", "RTTAVG", "LOGFILE"))
 
 
 local function init_ping()
@@ -89,6 +92,9 @@ local function init_ping()
 		min_ttl=nil,
 		max_ttl=nil,
 		tot_ttl=0,
+		min_hop=nil,
+		max_hop=nil,
+		tot_hop=0,
 		min_time=nil,
 		max_time=nil,
 		tot_time=0,
@@ -157,24 +163,26 @@ local function eval_pings(ping )
 				for i = 1,((ping.minSeq and ping.minSeq > ping.maxSeq) and ping.minSeq or ping.maxSeq) do
 						
 					if i <= ping.maxSeq and ping.data_table[i] then
-						out_data_fd:write(i.." "..ping.prot.." "..
-								  ping.node_id.." "..
-								  ping.data_table[i].time.." "..
-								  ping.data_table[i].ttl.." "..
-								  global_data.curr_group.." "..
-								  ping.exp.." "..
-								  ping.file.." "..
-								  "\n")
+						
+						out_data_fd:write(string.format(data_lin_format,
+								  i,
+								  ping.prot,
+								  ping.node_id,
+								  ping.exp,
+								  global_data.curr_group,
+								  ping.data_table[i].time,
+								  ping.data_table[i].ttl,
+								  ping.data_table[i].hop
+								  ))							 
 					else
-						out_data_fd:write(i.." "..ping.prot.." "..
-								  ping.node_id.." "..
-								  "NA".." "..
-								  "NA".." "..
-								  global_data.curr_group.." "..
-								  ping.exp.." "..
-								  ping.file.." "..
-								  "\n")
-			
+						out_data_fd:write(string.format(data_lin_format,
+								  i,
+								  ping.prot,
+								  ping.node_id,
+								  ping.exp,
+								  global_data.curr_group,
+								  "NA", "NA", "NA"
+								  ))
 					end
 				end
 				
@@ -198,9 +206,9 @@ local function eval_pings(ping )
 --						  ping.unmatched,
 --						  ping.lost,
 						  ping.reorders_last,
-						  (ping.min_ttl or "NA"),
---						  (ping.max_ttl or "NA"),
-						  (ping.tot_ttl/ping.unique_succeeds),
+						  (ping.max_hop or "NA"),
+--						  (ping.min_hop or "NA"),
+						  (ping.tot_hop/ping.unique_succeeds),
 						  (ping.min_time or "NA"),
 						  (ping.max_time or "NA"),
 						  (ping.tot_time/ping.unique_succeeds),
@@ -275,6 +283,7 @@ local function iterate_log_file( log )
 			local probe_seq   = (line:match( "icmp_seq=[%d]+") or "NA" ):match("[%d]+")
 			local probe_ttl   = (line:match( "ttl=[%d]+") or "NA" ):match("[%d]+")
 			local probe_time  = (line:match( "time=[%d]+.[%d]+ ms") or "NA" ):match("[%d]+.[%d]+")
+			local probe_hop
 			
 			if (probe_bytes and probe_addr and probe_seq and probe_ttl and probe_time) then
 				
@@ -315,11 +324,15 @@ local function iterate_log_file( log )
 				probe_bytes = tonumber(probe_bytes)
 				probe_seq = tonumber(probe_seq)
 				probe_ttl = tonumber(probe_ttl)
+				probe_hop = 1 + (MAX_TTL - probe_ttl)
 				
 				ping.max_seq = math.max((ping.max_seq or probe_seq),probe_seq)
 				ping.min_ttl = math.min((ping.min_ttl or probe_ttl),probe_ttl)
 				ping.max_ttl = math.max((ping.max_ttl or probe_ttl),probe_ttl)
 				ping.tot_ttl = ping.tot_ttl + probe_ttl
+				ping.min_hop = math.min((ping.min_hop or probe_hop),probe_hop)
+				ping.max_hop = math.max((ping.max_hop or probe_hop),probe_hop)
+				ping.tot_hop = ping.tot_hop + probe_hop
 				ping.min_time = math.min((ping.min_time or probe_time),probe_time)
 				ping.max_time = math.max((ping.max_time or probe_time),probe_time)
 				ping.tot_time = ping.tot_time + probe_time
@@ -344,7 +357,7 @@ local function iterate_log_file( log )
 					ping.last_seq = probe_seq
 					ping.reorders_max = (ping.max_seq > probe_seq) and (ping.reorders_max + 1) or ping.reorders_max
 					
-					ping.data_table[probe_seq] = {seq=probe_seq, ttl=probe_ttl, time=probe_time}
+					ping.data_table[probe_seq] = {seq=probe_seq, ttl=probe_ttl, hop=probe_hop, time=probe_time}
 	
 				end
 		

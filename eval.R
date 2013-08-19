@@ -1,5 +1,38 @@
 #library(Hmisc)
+library(plotrix)
 
+
+ecdfYforX <- function(data, X) {
+
+  ecdfyforx <- function(data, x) {
+    length(data[ data<=x ]) / length(data)
+  }
+  
+  results <- c()
+# print(paste("X=",X))
+  for (x in c(X)) {
+#   print(paste("x=",x))
+    results <- c( results, ecdfyforx(data, x) )
+  }
+  
+  results
+}
+
+ecdfXforY <- function(data, y) {
+  pf <- (y)*length(data)
+  pd <- (pf %/% 1) + (ifelse((pf %% 1)>0, 1, 0))
+  sort(data)[pd]
+}
+
+ecdfYElements <- function(data) {
+  L <-(sapply(lapply(split(data,c(rep("G",length(data)))), ecdf), function(e) e(data)))
+  V <- L[1:length(data)]
+  as.double(levels(factor(V)))
+}
+
+ecdfXElements <- function(data) {
+  ecdfXforY(data,ecdfYElements(data))
+}
 
 timeData <- function(D) {
   allProtocols <- levels(D$PROTO)
@@ -60,10 +93,15 @@ timeData <- function(D) {
   #  legend("topleft",col=c("red","blue"),lty=1,pch=3,legend=c("y1","y2"))  
 }
 
-ecdfData <- function(D, what, asLog, sameLen) {
+
+
+ecdfData <- function(D, what, xLabel, asLog, sameLen, scatterPlot, statsTable, yMax, qx) {
   
-  scatterPlot=FALSE
-  yMax <- 1 #0.8
+#  scatterPlot=FALSE
+#  statsTable
+#  yMax <- 1.5 #0.8
+  qy=c(0.5)
+# qx=c(10,100,1000)
   
   valMax <- 0
   valMin <- Inf
@@ -105,7 +143,7 @@ ecdfData <- function(D, what, asLog, sameLen) {
     allVals        <- c(allVals,   probesAllValid)
     allGroups      <- c(allGroups, rep(prot, numsTotal))
     
-    legendProt <- c(legendProt, paste(prot, " n=",lenProt[[prot]],"/",length(probes), sep=""))
+    legendProt <- c(legendProt, paste(prot, " n=",sum(!is.na(probes)),"/", length(probes), sep=""))
     legendSym  <- c(legendSym,  baseSymbol)    
     baseSymbol=baseSymbol+1
   }
@@ -113,52 +151,73 @@ ecdfData <- function(D, what, asLog, sameLen) {
   
   par(mar=c(5,5,2,5), xlog=TRUE)
   plot.ecdf( valMax*2, xlim=c(valMin,valMax), ylim=(c(0,yMax)), verticals=FALSE, do.points=FALSE, 
-             xlab=what, ylab="ECDF", main="", 
+             xlab=xLabel, ylab="ECDF", main="", 
              log=asLog,
              add=FALSE )
 
   grid(col="grey")
   axis(4)
   
-  qy=c(0.5)
-  qy=seq(0,yMax,0.1)
-  abline(h=qy, col="grey")
+  abline(h=qy, col="darkgrey")
+  abline(v=qx, col="darkgrey")
+  
+  abline(h=seq(0,yMax,0.1), col="grey")
   
 #  qx=c()
 #  abline(v=qx, col="grey")
 
-  if (scatterPlot==TRUE) {
-    baseSymbol=1
-    for (prot in allProtocols) {
-      points( (D[["RTT"]][D$PROTO==prot]), 
-              (D[["HOPS"]][D$PROTO==prot] + ((baseSymbol-2)/10))/10,
-              pch=3,#baseSymbol,
-              cex=0.5,
-              col=baseSymbol )
-      
-      baseSymbol=baseSymbol+1
-    }
-    mtext("HOPS/10",side=4,line=3)
-    legend(x=valMin,y=(yMax-0.2), legendProt, pch=3, col=legendSym, title="HOPS", cex=0.8)
-  }  
+  stat <- array(dim=c((length(allProtocols)+1),(length(qx)+1)))
+# stat[,1] <- c(NA,allProtocols)
+  stat[1,] <- c(NA,paste(" ",qx))
+  
   
   baseSymbol=1
   for (prot in allProtocols) {
     V <- allVals[allGroups==prot]
     E <- ecdf(V)
     plot(E, col=baseSymbol, lty=1, cex.lab=1, cex.axis=1, lwd=2,
-         verticals=TRUE, do.points=TRUE, pch=3, cex=0.5, add=TRUE)
+         verticals=TRUE, do.points=TRUE, pch=3, cex=0.4, add=TRUE)
     
     qp <- array(c(quantile(E,probs=qy),qy), dim=c(length(qy),2))
-#   points(qp, pch=baseSymbol, col=baseSymbol)
-#   abline(v=qp[,1], col=baseSymbol)
+    #   points(qp, pch=baseSymbol, col=baseSymbol)
+    #   abline(v=qp[,1], col=baseSymbol)
     
+    
+#   points(ecdfXforY(V,qy), qy, col=baseSymbol, pch=baseSymbol, lwd=2, cex=1.5)
+    qxy <- ecdfYforX(V,qx)
+    points(qx, qxy, col=baseSymbol, pch=baseSymbol, lwd=2, cex=1.5)
+#   text(qx,qxy,paste(qxy,"%"),adj=c(0,0),cex=0.8)
+ 
+    stat[baseSymbol+1,] <- c(prot, paste(" ",as.integer(qxy*100)))
     baseSymbol=baseSymbol+1
   }
+  legend(x=valMin,y=yMax, legendProt, lty=1, col=legendSym, pch=legendSym, bty="n", cex=0.8)
+# legend("bottom", legendProt, lty=1, col=legendSym, title="ECDF", cex=0.8)
+  
+  if (statsTable==TRUE) {
+    addtable2plot(valMin,yMax/(1/0.6), stat, display.colnames=FALSE, bty=FALSE, cex=0.8, 
+                  hlines=TRUE, vlines=TRUE,
+                  title=paste("proportion [%] <= ",what))  
+  }
+  
+  if (scatterPlot==TRUE) {
+#    par(new=TRUE)
+    baseSymbol=1
+    for (prot in allProtocols) {
+      points( (D[["HOPS"]][D$PROTO==prot] + ((baseSymbol-2)/10)),
+              (D[["RTT"]][D$PROTO==prot]) / 10,
+              pch=3,#baseSymbol,
+              cex=0.5,
+              col=baseSymbol )
+      
+      baseSymbol=baseSymbol+1
+    }
+    mtext("RTT [10ms]",side=4,line=3)
+    legend("bottomright", legendProt, pch=3, col=legendSym, title="RTT", cex=0.8)
+  }  
+  
 
   
-# legend("topleft",     legendProt, pch=legendSym,col=legendSym)
-  legend(x=valMin,y=yMax, legendProt, lty=1, col=legendSym, title="ECDF", cex=0.8)
   
 #  Ecdf( allVals, 
 #        xlab=what, 
@@ -169,23 +228,39 @@ ecdfData <- function(D, what, asLog, sameLen) {
 }
 
 
-D <- read.table("tmp.data", header=TRUE)
+getSubset <- function(S, group, values) {
+  s <- S[[group]]=="ILLEGAL"
+  
+  for (v in values) {
+    s <- s | S[[group]]==v
+  }
+  
+  subset(S,s)
+}
 
-S <- D$GRP==0
-S <- S | D$GRP==1                # mobile_node0 
-S <- S | D$GRP==2                # mobile_node1 
-S <- S | D$GRP==3                # mobile_running_test0
-S <- S | (D$GRP>=4 & D$GRP<=21)  # random_ping_test0
-S <- S | (D$GRP>=22 & D$GRP<=28) # random_ping_test1
+groups <- c(
+  1,     # mobile_node0 
+  2,     # mobile_node1 
+#  3,     # mobile_running_test0
+#  4:21,  # random_ping_test0
+#  22:28, # random_ping_test1,
+  "INVALID"
+  )
 
-D <- data.frame( PROTO=D[["PROTO"]][S] , RTT=D[["RTT"]][S], TTL=D[["TTL"]][S] )
+D <- getSubset( (read.table("tmp.data", header=TRUE)), "GRP", groups)
+S <- getSubset( (read.table("tmp.stat", header=TRUE)), "GRP", groups)
 
-D$HOPS <- ( max( D$TTL[!is.na(D$TTL)] ) +1 ) - D$TTL
-ecdfData(D,"RTT","x", FALSE)
-#ecdfData(D,"HOPS","", FALSE)
+ecdfData(D,"RTT", "round tip time (RTT) [ms]","x", FALSE, FALSE,TRUE, 1, c(10,100,1000))
+#ecdfData(D,"HOPS", "number of hops","", FALSE, FALSE,FALSE, 1, c(max(D[["HOPS"]],na.rm=TRUE)))
 
 #timeData(D)
 
+#TODO:
+# RTT over HOPS
+# Hops histogram
+# quantiles cases
+# title
+# legends
 
 
 

@@ -1,6 +1,8 @@
+#!/usr/bin/Rscript
+
 #library(Hmisc)
 library(plotrix)
-
+library(stringr)
 
 ecdfYforX <- function(data, X) {
 
@@ -60,7 +62,11 @@ timeData <- function(D) {
   for (prot in allProtocols) {
     length(rttProbes[[prot]]) <- lenMax
     length(hopProbes[[prot]]) <- lenMax
-    legendProt <- c(legendProt, paste(prot, " n=",lenProt[[prot]], sep=""))
+    legendProt <- c(legendProt, 
+        paste(prot, " n=",
+          sum(S[["maxSeq"]][S$PROTO==prot]),"/",
+          lenProt[[prot]],"/",
+          sum(S[["SEQMAX"]][S$PROTO==prot]), sep=""))
     legendSym  <- c(legendSym,  baseSymbol)
     baseSymbol=baseSymbol+1
   }
@@ -87,15 +93,15 @@ timeData <- function(D) {
   
   axis(4)
   mtext("RTT",side=2,line=3)
-  mtext("HOPS",side=4,line=3)
-  legend("topright", title="HOPS", legendProt, lty=1, col=legendSym, cex=0.8)
   legend("topleft",  title="RTT",  legendProt, pch=3, col=legendSym, cex=0.8)
+  mtext("HOPS",side=4,line=3)
+  legend("topright", title="HOPS", allProtocols, lty=1, col=legendSym, cex=0.8)
   #  legend("topleft",col=c("red","blue"),lty=1,pch=3,legend=c("y1","y2"))  
 }
 
 
 
-ecdfData <- function(D, what, xLabel, asLog, sameLen, scatterPlot, statsTable, yMax, qx) {
+ecdfData <- function(S,D, what, xLabel, asLog, sameLen, scatterPlot, statsTable, yMax, qx) {
   
 #  scatterPlot=FALSE
 #  statsTable
@@ -127,7 +133,6 @@ ecdfData <- function(D, what, xLabel, asLog, sameLen, scatterPlot, statsTable, y
     lenMax <- max(c(lenMax,length(probes)))
     lenMin <- min(c(lenMin,length(probes)))
     lenProt[[prot]] <- length(probes)
-
   }
   
   baseSymbol=1
@@ -143,7 +148,11 @@ ecdfData <- function(D, what, xLabel, asLog, sameLen, scatterPlot, statsTable, y
     allVals        <- c(allVals,   probesAllValid)
     allGroups      <- c(allGroups, rep(prot, numsTotal))
     
-    legendProt <- c(legendProt, paste(prot, " n=",sum(!is.na(probes)),"/", length(probes), sep=""))
+    legendProt <- c(legendProt, 
+                    paste(prot, " n=",
+                          sum(S[["maxSeq"]][S$PROTO==prot]),"/",
+                          length(probes),"/",
+                          sum(S[["SEQMAX"]][S$PROTO==prot]), sep=""))
     legendSym  <- c(legendSym,  baseSymbol)    
     baseSymbol=baseSymbol+1
   }
@@ -238,33 +247,118 @@ getSubset <- function(S, group, values) {
   subset(S,s)
 }
 
-groups <- c(
-  1,     # mobile_node0 
-  2,     # mobile_node1 
-#  3,     # mobile_running_test0
-#  4:21,  # random_ping_test0
-#  22:28, # random_ping_test1,
-  "INVALID"
-  )
+error <- function(msgs="") {
+  print(paste("ERROR: ", paste(msgs, sep=" ",collapse="! ")))
+  terminate()
+}
 
-D <- getSubset( (read.table("tmp.data", header=TRUE)), "GRP", groups)
-S <- getSubset( (read.table("tmp.stat", header=TRUE)), "GRP", groups)
+getArgList <- function( validArgs ) {
 
-ecdfData(D,"RTT", "round tip time (RTT) [ms]","x", FALSE, FALSE,TRUE, 1, c(10,100,1000))
-#ecdfData(D,"HOPS", "number of hops","", FALSE, FALSE,FALSE, 1, c(max(D[["HOPS"]],na.rm=TRUE)))
+  args       <- commandArgs(TRUE)
+  argList    <- list()
+  argNum     <- 0
+  argPattern <- "^--.*="
+  argNew     <- validArgs[1]
+  
+  for (a in args) {
+    
+    argFound <- str_extract( a, argPattern)
+    if ( class(argFound)=="character" ) {
+      argName <- sub( sub( argFound, pattern="^--", replacement="" ), pattern="=$", replacement="" )
+      argVals <- sub( a, pattern=argFound, replacement="" )
+      
+      if (class(argName)=="character" && class(argVals)=="character") {
+        
+        if (argName==validArgs[1]) {
+          argNum <- argNum + 1
+        } else if ( sum(validArgs==argName) == 0 ) {
+          error("Invalid arg: ", argName)
+        }
+        
+        if (argNum >= 1) {
+          argList[[argName]][argNum] <- argVals
+        } else {
+          error("First argument must be: ", argNew)
+        }
+        
+        for (i in 1:length(argList)) 
+          length(argList[[i]]) <- argNum
+      
+      } else {
+        error( c("Invalid arg structure: ",a))
+      }
+    } else {
+      error( c("arg: ",a) )
+    }
+    
+  }
+  print(argList)
+  argList
+}
 
-#timeData(D)
 
-#TODO:
+
+
+print("hello")
+print(args)
+argList <- getArgList(c("plot","type","groups"))
+
+D <- read.table("tmp.data", header=TRUE)
+S <- read.table("tmp.stat", header=TRUE)
+
+if (length(argList$plot)>=1) {
+  for (i in 1:length(argList$plot)) {
+    
+  
+    groups <- c(
+      #  1,     # mobile_node0 
+      #  2,     # mobile_node1 
+      #  3,     # mobile_running_test0
+      #  4:21,  # random_ping_test0
+      #  22:28, # random_ping_test1,
+      "INVALID"
+    )
+    
+    if (length(argList$groups) >= i) {
+      for (g in unlist(strsplit(argList$groups[i],","))) {
+        groups <- c( groups, as.integer(g))
+      }
+    }
+    
+    d <- getSubset( D, "GRP", groups)
+    s <- getSubset( S, "GRP", groups)
+    
+    if (length(argList$type) >= i) {
+      
+      if (length(argList$plot) >= i)
+        pdf( file=argList$plot[i] )
+      
+      
+      if (argList$type[i]=="ecdfVsRtt") {
+        ecdfData(s,d,"RTT", "round tip time (RTT) [ms]","x", FALSE, FALSE,TRUE, 1, c(10,100,1000))
+      } else if (argList$type[i]=="ecdfVsHops") {
+        ecdfData(s,d,"HOPS", "number of hops","", FALSE, FALSE,FALSE, 1, c(max(d[["HOPS"]],na.rm=TRUE)))
+      } else if (argList$type[i]=="rttVsHops") {
+        rttVsHops(s,d)
+      } else if (argList$type[i]=="dataVsTime") {
+        timeData(d)
+      } else {
+        error("Unkown type: ", argList$type[i])
+      }
+      
+      if (length(argList$plot) >= i)
+        dev.off()
+    }  
+  }
+}
+#TODOs:
 # RTT over HOPS
 # Hops histogram
-# quantiles cases
+# boxplots
 # title
-# legends
 
 
-
-
+#q(status=0)
 
 
 

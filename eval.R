@@ -252,43 +252,55 @@ error <- function(msgs="") {
   terminate()
 }
 
-getArgList <- function( validArgs ) {
+getArgList <- function( argStruct ) {
 
   args       <- commandArgs(TRUE)
   argList    <- list()
-  argNum     <- 0
   argPattern <- "^--.*="
-  argNew     <- validArgs[1]
+  argMax     <- 0
   
-  for (a in args) {
+  for (s in 1:length(argStruct)) {
+    validArgs  <- argStruct[[s]]
+    argNum     <- 0
+    argNew     <- validArgs[1]
     
-    argFound <- str_extract( a, argPattern)
-    if ( class(argFound)=="character" ) {
-      argName <- sub( sub( argFound, pattern="^--", replacement="" ), pattern="=$", replacement="" )
-      argVals <- sub( a, pattern=argFound, replacement="" )
+    for (a in args) {
       
-      if (class(argName)=="character" && class(argVals)=="character") {
+      argFound <- str_extract( a, argPattern)
+      if ( class(argFound)=="character" ) {
+        argName <- sub( sub( argFound, pattern="^--", replacement="" ), pattern="=$", replacement="" )
+        argVals <- sub( a, pattern=argFound, replacement="" )
         
-        if (argName==validArgs[1]) {
-          argNum <- argNum + 1
-        } else if ( sum(validArgs==argName) == 0 ) {
-          error("Invalid arg: ", argName)
-        }
+        if (class(argName)=="character" && class(argVals)=="character") {
+          
+          if ( sum(validArgs==argName) == 1 ) {
+            
+            if (argName==validArgs[1]) {
+              argNum <- argNum + 1
+              argMax <- max(argMax,argNum)
+            }
+            
+            if (argNum >= 1) {
+              argList[[argName]][argNum] <- argVals
+            } else {
+              error(c("First argument must be: ", argNew))
+            }            
+          }
         
-        if (argNum >= 1) {
-          argList[[argName]][argNum] <- argVals
         } else {
-          error("First argument must be: ", argNew)
+          error( c("Invalid arg structure: ",a))
         }
-        
-        for (i in 1:length(argList)) 
-          length(argList[[i]]) <- argNum
-      
       } else {
-        error( c("Invalid arg structure: ",a))
+        error( c("arg: ",a) )
       }
-    } else {
-      error( c("arg: ",a) )
+    }
+    
+    for (i in 1:length(validArgs)) {
+      print( paste("arg=",validArgs[i], " <- ", argMax, sep="" ) )
+      if (length(argList[[validArgs[i]]]) == 0)
+        argList[[validArgs[i]]][argMax] <- NA
+      else
+        length(argList[[validArgs[i]]]) <- argMax
     }
     
   }
@@ -296,20 +308,47 @@ getArgList <- function( validArgs ) {
   argList
 }
 
+createTexImageSource <- function ( texFile, pdfFile, label=NA, descr=NA, width=NA, centering=TRUE ) {
+  
+  label <- if (!is.na(label) && class(label)=="character") label else ""
+  descr <- if (!is.na(descr) && class(descr)=="character") descr else ""
+  width <- if (!is.na(width) && class(descr)=="character") as.single(width) else 1
+  
+  tex <- c(
+    "\\begin{figure}[h]\n",
+    (if (centering)    " \\centering\n" else ""),
+    " \\includegraphics[width=", as.character(width), "\\textwidth]{", pdfFile, "}\n",
+    (if (!is.na(descr)) paste(" \\caption{", descr, "}\n", sep="") else ""),
+    (if (!is.na(label)) paste(" \\label{",   label, "}\n", sep="") else ""),
+    "\\end{figure}\n"
+        )
+      
+  print( paste("writing tex image source to: ", texFile ) )
+  cat(tex, file=texFile, sep="")
+}
 
 
 
 print("hello")
 print(args)
-argList <- getArgList(c("plot","type","groups"))
+argList <- getArgList(list(
+                            images=c("imgdir"),
+                            tex=c("texdir"),
+                            input=c("data","stat"),
+                            plots=c("name","type","groups","desc", "width")))
 
-D <- read.table("tmp.data", header=TRUE)
-S <- read.table("tmp.stat", header=TRUE)
+inDataFile <- if ( class(argList$data[1])=="character" ) argList$data[1] else "tmp.data"
+inStatFile <- if ( class(argList$stat[1])=="character" ) argList$stat[1] else "tmp.stat"
 
-if (length(argList$plot)>=1) {
-  for (i in 1:length(argList$plot)) {
-    
+D <- read.table( inDataFile, header=TRUE)
+S <- read.table( inStatFile, header=TRUE)
+
+
+
+if (length(argList$name)>=1) {
   
+  for (i in 1:length(argList$name)) {
+
     groups <- c(
       #  1,     # mobile_node0 
       #  2,     # mobile_node1 
@@ -330,8 +369,20 @@ if (length(argList$plot)>=1) {
     
     if (length(argList$type) >= i) {
       
-      if (length(argList$plot) >= i)
-        pdf( file=argList$plot[i] )
+      pdfFile <- FALSE
+      if (length(argList$name) >= i && length(argList$imgdir) == 1) {
+        pdfFile=paste( argList$imgdir[1], "/", argList$name[i], ".pdf", sep="" )
+        print( paste("writing pdf to: ", pdfFile ) )
+        pdf( file=pdfFile )
+      }
+      
+      if (pdfFile != FALSE && length(argList$texdir) == 1) {
+        createTexImageSource( paste(argList$texdir[1], "/", argList$name[i], ".tex", sep="" ), 
+                              paste("", pdfFile, sep=""),
+                              label=argList$name[i], 
+                              descr=argList$desc[i],
+                              width=argList$width[i])
+      }
       
       
       if (argList$type[i]=="ecdfVsRtt") {
@@ -346,8 +397,10 @@ if (length(argList$plot)>=1) {
         error("Unkown type: ", argList$type[i])
       }
       
-      if (length(argList$plot) >= i)
+      if (pdfFile!=FALSE)
         dev.off()
+      
+      
     }  
   }
 }

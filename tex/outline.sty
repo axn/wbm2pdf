@@ -1,0 +1,171 @@
+% To enable working with both pdflatex (pdf/png figures) and plain latex (eps/pdf figures)
+\newif\ifCLASSINFOpdf               \CLASSINFOpdftrue
+
+\ifCLASSINFOpdf
+    \usepackage[pdftex]{graphicx}
+    \graphicspath{{./},{figures/}}
+    \DeclareGraphicsExtensions{.pdf,.png}
+\else
+    \usepackage[dvips]{graphicx}
+    \graphicspath{{./},{figures/}}
+    \DeclareGraphicsExtensions{.pdf,.eps}
+\fi
+
+%watermark
+\usepackage{wallpaper}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% Default packages commonly used
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{setspace} 
+\usepackage[nottoc]{tocbibind}
+
+\usepackage[utf8]{inputenc}
+%%%%%%%%%%% Table related commands
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{ctable}
+\newcommand{\otoprule}{\midrule[\heavyrulewidth]}
+\newcommand{\ctoprule}[1]{\cmidrule[\heavyrulewidth]{#1}}
+%%%%%%%%%%% Depth of toc and paragraph layout
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{8pt}  
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{5}
+%%%%%%%%%%% Fancy Header and Footer
+\usepackage{fancyhdr}    
+\usepackage[left=3cm,top=2.5cm,right=3cm,bottom=2.5cm,includeheadfoot]{geometry}
+%\usepackage[left=3.85cm,top=3.85cm,right=3.85cm,bottom=3.35cm,includeheadfoot]{geometry}
+% \usepackage[left=4cm,top=3.5cm,right=4cm,bottom=3.5cm,includeheadfoot]{geometry}
+\usepackage[plainpages=false]{hyperref}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% Page margins
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setlength{\headheight}{14.5pt}
+% \setlength{\headsep}{1cm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% Headings and Footers
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Sets fancy header and footer
+% \pagestyle{fancy}
+% Page number (boldface)
+% \fancyfoot[C]{\bfseries\thepage}%
+% Chapter and sections in head
+% \fancyhead{}%
+
+% \fancyhead[RO]{\bfseries\leftmark}   % Chapter in the right on even pages
+% \fancyhead[LE]{\bfseries\rightmark}   % Section in the left on odd pages
+% Small Capitals chapter and section marker style
+
+% \renewcommand{\sectionmark}[1]{\markboth{\thesection.\ #1}{}}%
+% \renewcommand{\subsectionmark}[1]{\markright{\thesubsection.\ #1}{}}%
+
+%\renewcommand{\subsectionmark}[1]{\markleft{\thesubsection.\ #1}{}}%
+% Width of head rule
+% \renewcommand{\headrulewidth}{0.3pt}    
+
+% Plain headers (for chapter's first pages, title pages, etc.)
+% \fancypagestyle{plain}{%
+%     % clear all header and footer fields
+%     \fancyhf{}
+%     % except the center
+%     \fancyfoot[C]{\bfseries\thepage}
+%     % no lines
+%     \renewcommand{\headrulewidth}{0pt}
+%     \renewcommand{\footrulewidth}{0pt}%
+% }
+
+\newcommand{\frontmatter}{
+%    \cleardoublepage
+    \pagenumbering{roman}
+}
+\newcommand{\mainmatter}{
+%    \cleardoublepage
+    \pagenumbering{arabic}
+    \setcounter{page}{1}
+}
+\newcommand{\backmatter}{
+%    \cleardoublepage
+    \pagestyle{plain}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% Style for empty pages when clearing double pages and symbol footnote
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Clear Header Style on the Last Empty Odd pages
+\makeatletter
+\def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else%
+  \hbox{}%
+  \thispagestyle{empty}%              % Empty header styles
+  \newpage%
+  \if@twocolumn\hbox{}\newpage\fi\fi\fi%
+}
+\makeatother
+
+% Clear Header Style on the Last Empty Odd pages
+\makeatletter
+\def\clearsinglepage{
+  \thispagestyle{plain}%              % Empty header styles
+  \newpage%
+}
+\makeatother
+
+% Footnotes with symbols instead of numbers, usage : \symbolfootnote[num]{text}
+% \long\def\symbolfootnote[#1]#2{\begingroup
+% \def\thefootnote{\fnsymbol{footnote}}\footnote[#1]{#2}\endgroup}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title page and document information
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\makeatletter
+\newcommand{\contributors}[1]{\gdef\@contributors{#1}}
+\newcommand{\doctype}[1]{\gdef\@doctype{#1}}
+\newcommand{\eventlocation}[1]{\gdef\@eventlocation{#1}}
+\newcommand{\eventdates}[1]{\gdef\@eventdates{#1}}
+\newcommand{\eventurl}[1]{\gdef\@eventurl{#1}}
+\newcommand{\logofigure}[1]{\gdef\@logofig{#1}}
+
+\renewcommand{\maketitle}{
+    \thispagestyle{empty}
+%% Add watermark
+%    \AddToShipoutPicture*{%
+%        \hspace*{-50mm}%
+%        \AtPageLowerLeft{%
+%            \parbox[b][\paperheight]{1\paperwidth}{%       
+%                \vspace*{67mm}%
+%                \includegraphics[width=0.5\paperwidth,height=0.5\paperheight,keepaspectratio]{\@logofig}%
+%                \vfill%
+%                
+%            }
+%        }
+%    }%
+    \begin{center}
+%        \vfill%
+%        \includegraphics[width=0.75\textwidth]{\@logofig}%
+%        \vfill%
+        \Huge{\textbf{\@title}}%
+        \vfill%
+        \large{\textsc{\@author}}\\%
+        \vfill%
+        \textbf{
+%            A \@doctype\ created by the \\
+%            \textsc{\@contributors}\\%
+%            \vspace*{10mm}
+            Creation date: \@date\\%
+            \vspace*{5mm}
+            Event: \\%
+            \@eventlocation \\%
+            \@eventdates \\%
+            \@eventurl \\%
+            \vfill%
+        }%
+        \vfill%
+        \includegraphics[width=0.75\textwidth]{\@logofig}%
+%        \vfill%
+    \end{center}%
+%    \cleardoublepage
+}
+\makeatother

@@ -128,6 +128,40 @@ WBM...
 \subsection{OLSR}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Testbed Descripiton}
+
+\subsection{Node System}
+
+\subsection{Topology}
+
+% wget http://downloads.battlemesh.org/WBMv6/geographical_map1.png
+% wget http://downloads.battlemesh.org/WBMv6/geographical_map2.png
+\begin{figure}[p]
+\centering
+\includegraphics[width=1.3\textwidth, angle=90]{geographical_map2.png}
+\caption{geographical map snapshot}
+\label{fig:geomap}
+\end{figure}
+
+
+% wget -O topo0.svg "http://battlemesh.org/BattleMeshV6/Tests?action=AttachFile&do=get&target=topo0.svg"
+\immediate\write18{ inkscape -D -z --file=topo0.svg --export-pdf=topo0.pdf }
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=1.3\textwidth, angle=90]{topo0.pdf}
+\caption{OLSR topology snapshot}
+\label{fig:olsr-topo}
+\end{figure}
+
+%\begin{figure}[h]
+%\centering
+%\def\svgwidth{\columnwidth}
+%\includesvg{topo0}
+%\end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

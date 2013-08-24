@@ -59,7 +59,7 @@ Version 6}
 \eventdates{15th to 21st of April 2013}
 \eventurl{http://battlemesh.org/BattleMeshV6}
 \doctype{measurement report}
-\logofigure{battlemeshv6}
+\logofigure{figures/battlemeshv6}
 
 \frontmatter
 
@@ -139,20 +139,20 @@ WBM...
 
 % wget http://downloads.battlemesh.org/WBMv6/geographical_map1.png
 % wget http://downloads.battlemesh.org/WBMv6/geographical_map2.png
-\begin{figure}[p]
+\begin{figure}[!ht]
 \centering
-\includegraphics[width=1.3\textwidth, angle=90]{geographical_map2.png}
+\includegraphics[width=1.4\textwidth, angle=90]{figures/geographical_map2.png}
 \caption{geographical map snapshot}
 \label{fig:geomap}
 \end{figure}
 
 
 % wget -O topo0.svg "http://battlemesh.org/BattleMeshV6/Tests?action=AttachFile&do=get&target=topo0.svg"
-\immediate\write18{ inkscape -D -z --file=topo0.svg --export-pdf=topo0.pdf }
+% \immediate\write18{ inkscape -D -z --file=topo0.svg --export-pdf=topo0.pdf }
 
-\begin{figure}[p]
+\begin{figure}[!ht]
 \centering
-\includegraphics[width=1.3\textwidth, angle=90]{topo0.pdf}
+\includegraphics[width=1.4\textwidth, angle=90]{figures/topo0.pdf}
 \caption{OLSR topology snapshot}
 \label{fig:olsr-topo}
 \end{figure}
@@ -176,28 +176,36 @@ WBM...
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\immediate\write18{ ../eval.R --data=../tmp.data --stat=../tmp.stat --imgdir=../img --texdir=. 
---name=m0 --type=ecdfVsRtt --groups=1 --width=0.4 --desc='mobile node 0' 
---name=m1 --type=ecdfVsRtt --groups=2 --width=0.4 --desc='mobile node 1' 
---name=m2 --type=ecdfVsRtt --groups=3 --width=0.4 --desc='fast mobile node' 
---name=s0 --type=ecdfVsRtt --groups=4 --width=0.4 --desc='random node'
-}
+%\immediate\write18{ ../eval.R --data=../tmp.data --stat=../tmp.stat --imgdir=../img --texdir=inputs/ }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Stationary Scenarios}
 
+%\makeFigure{sArtt}{Random node test 1}{0.7}
+%\makeFigure{sBrtt}{Random node test 2}{0.7}
 
-\input{s0.tex}
+%\makeCCTabl{tbl:s4-s9}{Individual Random node tests} {%
+%      \makeGraphic{s4rtt} & \makeGraphic{s5rtt} \\
+%      \makeGraphic{s6rtt} & \makeGraphic{s7rtt} \\
+%      \makeGraphic{s8rtt} & \makeGraphic{s9rtt} \\
+%}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Mobile Scenarios}
 
+\makeCCTabl{tbl:m0-m2}{Individual mobile and running node scenarios} {%
+      \makeGraphic{m0rtt} & \makeGraphic{m0tim} \\
+      \makeGraphic{m0hop} & \\
 
+}
 
+%\makeCCTabl{tbl:m0-m2}{Individual mobile and running node scenarios} {%
+%      \makeGraphic{m0rtt} & \makeGraphic{m0tim} \\
+%      \makeGraphic{m1rtt} & \makeGraphic{m1tim} \\
+%      \makeGraphic{m2rtt} & \makeGraphic{m2tim} \\
+%}
 
-\input{m0.tex}
-\input{m1.tex}
-\input{m2.tex}
 
 %\begin{figure}
 % \centering

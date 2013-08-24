@@ -36,7 +36,7 @@ ecdfXElements <- function(data) {
   ecdfXforY(data,ecdfYElements(data))
 }
 
-timeData <- function(D) {
+timeData <- function(S, D) {
   allProtocols <- levels(D$PROTO)
 
   rttMax <- 0
@@ -308,25 +308,27 @@ getArgList <- function( argStruct ) {
   argList
 }
 
-createTexImageSource <- function ( texFile, pdfFile, label=NA, descr=NA, width=NA, centering=TRUE ) {
+
+createTexFigureSource <- function ( texFile, pdfFile, label=NA, descr=NA, width=NA, center=NA, figure=NA ) {
   
-  label <- if (!is.na(label) && class(label)=="character") label else ""
-  descr <- if (!is.na(descr) && class(descr)=="character") descr else ""
-  width <- if (!is.na(width) && class(descr)=="character") as.single(width) else 1
+# label  <- if (!is.na(label) && class(label)=="character") label else ""
+# descr  <- if (!is.na(descr) && class(descr)=="character") descr else ""
+  width  <- if (is.na(width))  1 else as.single(width)
+  center <- if (is.na(center)) 1 else as.integer(center)
+  figure <- if (is.na(figure)) 1 else as.integer(figure)
   
   tex <- c(
-    "\\begin{figure}[h]\n",
-    (if (centering)    " \\centering\n" else ""),
+    if (figure==1) "\\begin{figure}\n" else "",
+    if (center==1) " \\centering\n" else "",
     " \\includegraphics[width=", as.character(width), "\\textwidth]{", pdfFile, "}\n",
-    (if (!is.na(descr)) paste(" \\caption{", descr, "}\n", sep="") else ""),
-    (if (!is.na(label)) paste(" \\label{",   label, "}\n", sep="") else ""),
-    "\\end{figure}\n"
-        )
-      
+    if (!is.na(descr)) paste(" \\caption{", descr, "}\n", sep="") else "",
+    if (!is.na(label)) paste(" \\label{",   label, "}\n", sep="") else "",
+    if (figure==1) "\\end{figure}\n" else ""
+  )
+  
   print( paste("writing tex image source to: ", texFile ) )
   cat(tex, file=texFile, sep="")
 }
-
 
 
 print("hello")
@@ -335,7 +337,7 @@ argList <- getArgList(list(
                             images=c("imgdir"),
                             tex=c("texdir"),
                             input=c("data","stat"),
-                            plots=c("name","type","groups","desc", "width")))
+                            plots=c("name","type","groups","desc", "width", "center", "figure", "label")))
 
 inDataFile <- if ( class(argList$data[1])=="character" ) argList$data[1] else "tmp.data"
 inStatFile <- if ( class(argList$stat[1])=="character" ) argList$stat[1] else "tmp.stat"
@@ -358,7 +360,7 @@ if (length(argList$name)>=1) {
       "INVALID"
     )
     
-    if (length(argList$groups) >= i) {
+    if (!is.na(argList$groups[i])) {
       for (g in unlist(strsplit(argList$groups[i],","))) {
         groups <- c( groups, as.integer(g))
       }
@@ -370,18 +372,20 @@ if (length(argList$name)>=1) {
     if (length(argList$type) >= i) {
       
       pdfFile <- FALSE
-      if (length(argList$name) >= i && length(argList$imgdir) == 1) {
+      if (!is.na(argList$name[i]) >= i && !is.na(argList$imgdir[1])) {
         pdfFile=paste( argList$imgdir[1], "/", argList$name[i], ".pdf", sep="" )
         print( paste("writing pdf to: ", pdfFile ) )
         pdf( file=pdfFile )
       }
       
-      if (pdfFile != FALSE && length(argList$texdir) == 1) {
-        createTexImageSource( paste(argList$texdir[1], "/", argList$name[i], ".tex", sep="" ), 
+      if (pdfFile != FALSE && !is.na(argList$texdir[1])) {
+        createTexFigureSource( paste(argList$texdir[1], "/", argList$name[i], ".tex", sep="" ), 
                               paste("", pdfFile, sep=""),
                               label=argList$name[i], 
                               descr=argList$desc[i],
-                              width=argList$width[i])
+                              width=argList$width[i],
+                              center=argList$center[i],
+                              figure=argList$figure[i])
       }
       
       
@@ -392,7 +396,7 @@ if (length(argList$name)>=1) {
       } else if (argList$type[i]=="rttVsHops") {
         rttVsHops(s,d)
       } else if (argList$type[i]=="dataVsTime") {
-        timeData(d)
+        timeData(s,d)
       } else {
         error("Unkown type: ", argList$type[i])
       }

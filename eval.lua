@@ -37,8 +37,8 @@ local in_log_files={
 	{["file"]="test_data/random_ping_test2/screenlog.1",              ["exp"]=4, ["minSeq"]=1000, ["maxTime"]=10000 },
 	}
 
-local out_data_file="./tmp.data"
-local out_stat_file="./tmp.stat"
+local out_data_file="./wbmv6.data"
+local out_stat_file="./wbmv6.stat"
 
 local protocols={ ["olsr"]   = "fdba:11:",
 		  ["babel"]  = "fdba:14:",

@@ -10,7 +10,7 @@ rawData = downloads.battlemesh.org/WBMv6/test_data/
 
 
 $(docname).pdf : Makefile $(docname).tex $(figures) $(autofig)
-	pdflatex $(docname).tex
+	pdflatex $(docname).tex && pdflatex $(docname).tex
 
 
 
@@ -85,7 +85,7 @@ not_now :
 
 
 clean_data : 
-	cd .. && rm -rf $(rawData) test_data
+	cd .. && rm -rf $$( echo $(rawData) | awk -F'/' '{print $$1}' ) test_data ../wbmv6.stst ../wbmv6.data
 
 clean_autofig : 
 	rm -f $(autofig)
@@ -94,6 +94,7 @@ clean_figures :
 	rm -f $(figures)
 
 clean_all :
+	make clean_data
 	make clean_autofig
 	make clean_figures
 	rm -f $(docname).pdf

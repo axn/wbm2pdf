@@ -5,12 +5,13 @@
 docname = wbmv6
 figures = figures/*.png figures/*.pdf figures/*.svg
 autofig = ../img/*.pdf
-
+rawData = downloads.battlemesh.org/WBMv6/test_data/
 
 
 
 $(docname).pdf : Makefile $(docname).tex $(figures) $(autofig)
 	pdflatex $(docname).tex
+
 
 
 $(figures) : 
@@ -69,16 +70,30 @@ not_now :
 
 
 
-../wbmv6.stat ../wbmv6.data : ../eval.lua
-	cd ..; ./eval.lua
 
-clean_autofig: 
+
+../wbmv6.stat ../wbmv6.data : ../eval.lua ../test_data
+	cd .. && ./eval.lua
+
+
+../test_data : 
+	cd .. && rm -rf $(rawData) && wget -rl1 http://$(rawData) && \
+	ln -s $(rawData) test_data && \
+	cd test_data && \
+	for i in $$( ls *.tar.gz ); do tar -xzvf $$i; done && \
+	cd random_ping_test1 && for f in $$(ls ping_test_olsr_* | awk -F'_' '{print $$4}' ); do cat *$$f >> screenlog.1; done
+
+
+clean_data : 
+	cd .. && rm -rf $(rawData) test_data
+
+clean_autofig : 
 	rm -f $(autofig)
 
-clean_figures:
+clean_figures :
 	rm -f $(figures)
 
-clean_all:
+clean_all :
 	make clean_autofig
 	make clean_figures
 	rm -f $(docname).pdf

@@ -12,29 +12,29 @@ print("start:")
 -- its size has at least minSeq entries
 
 local in_log_files={
-	{["file"]="test_data/mobile_node0/screenlog.ping_babel",          ["exp"]=1, ["minSeq"]=3860},
-	{["file"]="test_data/mobile_node0/screenlog.ping_batadv",         ["exp"]=1, ["minSeq"]=3860},
-	{["file"]="test_data/mobile_node0/screenlog.ping_bmx6",           ["exp"]=1, ["minSeq"]=3860},
-	{["file"]="test_data/mobile_node0/screenlog.ping_olsr",           ["exp"]=1, ["minSeq"]=3860},
+	{["file"]="test_data/screenlog.ping_babel",                       ["exp"]=1, ["minSeq"]=3860},
+	{["file"]="test_data/screenlog.ping_batadv",                      ["exp"]=1, ["minSeq"]=3860},
+	{["file"]="test_data/screenlog.ping_bmx6",                        ["exp"]=1, ["minSeq"]=3860},
+	{["file"]="test_data/screenlog.ping_olsr",                        ["exp"]=1, ["minSeq"]=3860},
 
-	{["file"]="test_data/mobile_node1/screenlog.ping_babel",          ["exp"]=2, ["minSeq"]=5220},
-	{["file"]="test_data/mobile_node1/screenlog.ping_batadv",         ["exp"]=2, ["minSeq"]=5220},
-	{["file"]="test_data/mobile_node1/screenlog.ping_bmx6",           ["exp"]=2, ["minSeq"]=5220},
-	{["file"]="test_data/mobile_node1/screenlog.ping_olsr",	          ["exp"]=2, ["minSeq"]=5220},
+	{["file"]="test_data/mobile_test1/screenlog.ping_babel",          ["exp"]=2, ["minSeq"]=5220},
+	{["file"]="test_data/mobile_test1/screenlog.ping_batadv",         ["exp"]=2, ["minSeq"]=5220},
+	{["file"]="test_data/mobile_test1/screenlog.ping_bmx6",           ["exp"]=2, ["minSeq"]=5220},
+	{["file"]="test_data/mobile_test1/screenlog.ping_olsr",	          ["exp"]=2, ["minSeq"]=5220},
 
 	{["file"]="test_data/mobile_running_test0/screenlog.ping_babel",  ["exp"]=3, ["minSeq"]=840},
 	{["file"]="test_data/mobile_running_test0/screenlog.ping_batadv", ["exp"]=3, ["minSeq"]=840},
 	{["file"]="test_data/mobile_running_test0/screenlog.ping_bmx6",   ["exp"]=3, ["minSeq"]=840},
 	{["file"]="test_data/mobile_running_test0/screenlog.ping_olsr",	  ["exp"]=3, ["minSeq"]=840},
 
-	{["file"]="test_data/random_ping_test0/screenlog.0",              ["exp"]=4, ["minSeq"]=1000, ["maxTime"]=10000 },
+	{["file"]="test_data/random_ping_test/screenlog.0",               ["exp"]=4, ["minSeq"]=1000, ["maxTime"]=10000 },
 	
 -- test_data/random_ping_test1$ for f in $(ls ping_test_olsr_* | awk -F'_' '{print $4}' ); do cat *$f >> screenlog.1 ; done
 	{["file"]="test_data/random_ping_test1/screenlog.1",              ["exp"]=4, ["minSeq"]=1000, ["maxTime"]=10000 },
 	
 -- this on has no usable results (no case where all protocols have at least min_pings succeeded):
 -- test_data/random_ping_test2$ for f in $(ls ping_test_olsr_* | awk -F'_' '{print $4}' ); do cat *$f >> screenlog.1 ; done
-	{["file"]="test_data/random_ping_test2/screenlog.1",              ["exp"]=4, ["minSeq"]=1000, ["maxTime"]=10000 },
+--	{["file"]="test_data/random_ping_test2/screenlog.1",              ["exp"]=4, ["minSeq"]=1000, ["maxTime"]=10000 },
 	}
 
 local out_data_file="./wbmv6.data"

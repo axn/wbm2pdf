@@ -9,9 +9,10 @@ rawData = downloads.battlemesh.org/WBMv6/test_data/
 
 
 
-$(docname).pdf : Makefile $(docname).tex $(figures) $(autofig)
-	pdflatex $(docname).tex && pdflatex $(docname).tex
 
+
+$(docname).pdf : $(docname).tex $(figures) $(autofig)
+	pdflatex $(docname).tex && pdflatex $(docname).tex
 
 
 $(figures) : 
@@ -28,6 +29,65 @@ $(autofig) : Makefile ../eval.R ../wbmv6.data ../wbmv6.stat
 --name=m0rtt --type=ecdfVsRtt  --groups=1 \
 --name=m0tim --type=dataVsTime --groups=1 \
 --name=m0hop --type=ecdfVsHops --groups=1 \
+--name=m0rvh --type=rttVsHops  --groups=1 \
+\
+--name=sArtt --type=ecdfVsRtt  --groups='4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21' \
+--name=sArvh --type=rttVsHops  --groups='4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21' \
+--name=sBrtt --type=ecdfVsRtt  --groups='22,23,24,25,26,27,28'                            \
+--name=sBrvh --type=rttVsHops  --groups='22,23,24,25,26,27,28'                            \
+\
+--name=s4rtt --type=ecdfVsRtt  --groups=4 \
+--name=s4rvh --type=rttVsHops  --groups=4 \
+--name=s5rtt --type=ecdfVsRtt  --groups=5 \
+--name=s5rvh --type=rttVsHops  --groups=5 \
+--name=s6rtt --type=ecdfVsRtt  --groups=6 \
+--name=s6rvh --type=rttVsHops  --groups=6 \
+--name=s7rtt --type=ecdfVsRtt  --groups=7 \
+--name=s7rvh --type=rttVsHops  --groups=7 \
+--name=s8rtt --type=ecdfVsRtt  --groups=8 \
+--name=s8rvh --type=rttVsHops  --groups=8 \
+--name=s9rtt --type=ecdfVsRtt  --groups=9 \
+--name=s9rvh --type=rttVsHops  --groups=9 \
+--name=s10rtt --type=ecdfVsRtt  --groups=10 \
+--name=s10rvh --type=rttVsHops  --groups=10 \
+--name=s11rtt --type=ecdfVsRtt  --groups=11 \
+--name=s11rvh --type=rttVsHops  --groups=11 \
+--name=s12rtt --type=ecdfVsRtt  --groups=12 \
+--name=s12rvh --type=rttVsHops  --groups=12 \
+--name=s13rtt --type=ecdfVsRtt  --groups=13 \
+--name=s13rvh --type=rttVsHops  --groups=13 \
+--name=s14rtt --type=ecdfVsRtt  --groups=14 \
+--name=s14rvh --type=rttVsHops  --groups=14 \
+--name=s15rtt --type=ecdfVsRtt  --groups=15 \
+--name=s15rvh --type=rttVsHops  --groups=15 \
+--name=s16rtt --type=ecdfVsRtt  --groups=16 \
+--name=s16rvh --type=rttVsHops  --groups=16 \
+--name=s17rtt --type=ecdfVsRtt  --groups=17 \
+--name=s17rvh --type=rttVsHops  --groups=17 \
+--name=s18rtt --type=ecdfVsRtt  --groups=18 \
+--name=s18rvh --type=rttVsHops  --groups=18 \
+--name=s19rtt --type=ecdfVsRtt  --groups=19 \
+--name=s19rvh --type=rttVsHops  --groups=19 \
+--name=s20rtt --type=ecdfVsRtt  --groups=20 \
+--name=s20rvh --type=rttVsHops  --groups=20 \
+--name=s21rtt --type=ecdfVsRtt  --groups=21 \
+--name=s21rvh --type=rttVsHops  --groups=21 \
+\
+--name=s22rtt --type=ecdfVsRtt  --groups=22 \
+--name=s22rvh --type=rttVsHops  --groups=22 \
+--name=s23rtt --type=ecdfVsRtt  --groups=23 \
+--name=s23rvh --type=rttVsHops  --groups=23 \
+--name=s24rtt --type=ecdfVsRtt  --groups=24 \
+--name=s24rvh --type=rttVsHops  --groups=24 \
+--name=s25rtt --type=ecdfVsRtt  --groups=25 \
+--name=s25rvh --type=rttVsHops  --groups=25 \
+--name=s26rtt --type=ecdfVsRtt  --groups=26 \
+--name=s26rvh --type=rttVsHops  --groups=26 \
+--name=s27rtt --type=ecdfVsRtt  --groups=27 \
+--name=s27rvh --type=rttVsHops  --groups=27 \
+--name=s28rtt --type=ecdfVsRtt  --groups=28 \
+--name=s28rvh --type=rttVsHops  --groups=28 \
+
 
 not_now :
 	\
@@ -39,6 +99,7 @@ not_now :
 --name=m2tim --type=dataVsTime --groups=3 \
 \
 --name=s4rtt --type=ecdfVsRtt  --groups=4 \
+--name=m4rvh --type=rttVsHops  --groups=4 \
 --name=s5rtt --type=ecdfVsRtt  --groups=5 \
 --name=s6rtt --type=ecdfVsRtt  --groups=6 \
 --name=s7rtt --type=ecdfVsRtt  --groups=7 \

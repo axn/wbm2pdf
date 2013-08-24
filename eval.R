@@ -4,6 +4,8 @@
 library(plotrix)
 library(stringr)
 
+colors <- c(rgb(0,0,0,1/3),rgb(1,0,0,1/4),rgb(0,1,0,1/4),rgb(0,0,1,1/3))
+
 ecdfYforX <- function(data, X) {
 
   ecdfyforx <- function(data, x) {
@@ -36,6 +38,76 @@ ecdfXElements <- function(data) {
   ecdfXforY(data,ecdfYElements(data))
 }
 
+
+
+rttVsHops <- function (S,D) {
+  allProtocols <- levels(D$PROTO)
+  
+  rttMax <- 0
+  hopMax <- 0
+  lenMax <- 0
+  hstMax <- 0
+  
+  rttProbes <- list()
+  hopProbes <- list()
+  histProt   <- c()
+  
+  legendProt=c()
+  legendSym=c()  
+  
+  baseSymbol=1
+  for (prot in allProtocols) {
+    rttProbes[[prot]] <- D[["RTT"]][D$PROTO==prot]
+    hopProbes[[prot]] <- D[["HOPS"]][D$PROTO==prot]
+        
+    hopMax <- max(c(hopMax,hopProbes[[prot]][!is.na(hopProbes[[prot]])]))
+    rttMax <- max(c(rttMax,rttProbes[[prot]][!is.na(rttProbes[[prot]])]))
+    lenMax <- max(c(lenMax,length(hopProbes[[prot]])))
+    hstMax <- max(c(hstMax,length(hopProbes[[prot]][!is.na(hopProbes[[prot]])])))    
+    baseSymbol=baseSymbol+1
+  }
+  
+  baseSymbol=1
+  for (prot in allProtocols) {
+    legendProt <- c(legendProt, 
+                    paste(prot, " n=",
+                          sum(S[["maxSeq"]][S$PROTO==prot]),"/",
+                          length(rttProbes[[prot]]),"/",
+                          sum(S[["SEQMAX"]][S$PROTO==prot]), sep=""))
+    legendSym  <- c(legendSym,  baseSymbol)
+    
+    histProt[[prot]] <- hist( hopProbes[[prot]]+((baseSymbol-0.5-(length(allProtocols)/2))/10), seq(0,hopMax+1,0.1), plot=F )
+    
+    baseSymbol=baseSymbol+1
+  }
+  
+  par(mar=c(5,4,4,5)+.1, ylog=TRUE)
+  plot(rep(rttMax,hopMax), type="n", log="y", ylim=c(1,rttMax), xlim=c(0.5,hopMax+0.5), ylab="RTT", xlab="hops")
+  baseSymbol=1
+  for (prot in allProtocols) {
+    points(hopProbes[[prot]]+((baseSymbol-0.5-(length(allProtocols)/2))/10), rttProbes[[prot]], 
+           type="p",pch=3,cex=0.2,col=baseSymbol)
+    baseSymbol=baseSymbol+1
+  }
+  
+  legend("topleft",  title=paste("RTT(hops), n=[used/expected/rcvd]"), bty="n",  legendProt, pch=3, col=legendSym, cex=0.8)
+    
+  
+  par(new=TRUE)
+  baseSymbol=1
+  for (prot in allProtocols) {
+    plot(histProt[[prot]], col=colors[baseSymbol], ylim=c(0,hstMax), xlim=c(0.5,hopMax+0.5), add=(baseSymbol!=1), 
+         main="", xlab="", ylab="", axes=F)
+    baseSymbol=baseSymbol+1
+  }
+  axis(4)
+  mtext("Frequency",side=4,line=3)
+  legend("topright", title="Frequency", bty="n", allProtocols, fill=colors, cex=0.8)
+  
+}
+
+
+
 timeData <- function(S, D) {
   allProtocols <- levels(D$PROTO)
 
@@ -44,7 +116,6 @@ timeData <- function(S, D) {
   lenMax <- 0
   rttProbes <- list()
   hopProbes <- list()
-  lenProt   <- list()
   legendProt=c()
   legendSym=c()  
   
@@ -55,18 +126,17 @@ timeData <- function(S, D) {
     hopMax <- max(c(hopMax,hopProbes[[prot]][!is.na(hopProbes[[prot]])]))
     rttMax <- max(c(rttMax,rttProbes[[prot]][!is.na(rttProbes[[prot]])]))
     lenMax <- max(c(lenMax,length(rttProbes[[prot]])))
-    lenProt[[prot]] <- length(rttProbes[[prot]])
   }
 
   baseSymbol=1
   for (prot in allProtocols) {
-    length(rttProbes[[prot]]) <- lenMax
-    length(hopProbes[[prot]]) <- lenMax
+#    length(rttProbes[[prot]]) <- lenMax
+#    length(hopProbes[[prot]]) <- lenMax
     legendProt <- c(legendProt, 
         paste(prot, " n=",
-          sum(S[["maxSeq"]][S$PROTO==prot]),"/",
-          lenProt[[prot]],"/",
-          sum(S[["SEQMAX"]][S$PROTO==prot]), sep=""))
+              sum(S[["maxSeq"]][S$PROTO==prot]),"/",
+              length(rttProbes[[prot]]),"/",
+              sum(S[["SEQMAX"]][S$PROTO==prot]), sep=""))
     legendSym  <- c(legendSym,  baseSymbol)
     baseSymbol=baseSymbol+1
   }
@@ -81,21 +151,18 @@ timeData <- function(S, D) {
 
   
   par(new=TRUE)
-  plot(rep(hopMax,lenMax), type="n", ylim=c(1,hopMax), axes=F, ylab="")
+  plot(rep(hopMax,lenMax), type="n", ylim=c(1,hopMax), axes=F, ylab="", xlab="")
   baseSymbol=1
   for (prot in allProtocols) {
     lines((hopProbes[[prot]])+(baseSymbol/20), type="l",lwd=3,col=baseSymbol)
     baseSymbol=baseSymbol+1
   }
   
-  
-  
-  
   axis(4)
-  mtext("RTT",side=2,line=3)
-  legend("topleft",  title="RTT",  legendProt, pch=3, col=legendSym, cex=0.8)
-  mtext("HOPS",side=4,line=3)
-  legend("topright", title="HOPS", allProtocols, lty=1, col=legendSym, cex=0.8)
+  mtext("RTT(index)",side=2,line=3)
+  legend("topleft",  title=paste("RTT, n=[used/expected/rcvd]"), bty="n",  legendProt, pch=3, col=legendSym, cex=0.8)
+  mtext("HOPS(index)",side=4,line=3)
+  legend("topright", title="HOPS", bty="n", allProtocols, lty=1, col=legendSym, cex=0.8)
   #  legend("topleft",col=c("red","blue"),lty=1,pch=3,legend=c("y1","y2"))  
 }
 
@@ -200,11 +267,11 @@ ecdfData <- function(S,D, what, xLabel, asLog, sameLen, scatterPlot, statsTable,
     stat[baseSymbol+1,] <- c(prot, paste(" ",as.integer(qxy*100)))
     baseSymbol=baseSymbol+1
   }
-  legend(x=valMin,y=yMax, legendProt, lty=1, col=legendSym, pch=legendSym, bty="n", cex=0.8)
-# legend("bottom", legendProt, lty=1, col=legendSym, title="ECDF", cex=0.8)
+  legend("topleft", legendProt, lty=1, col=legendSym, pch=legendSym, title=paste("ECDF(",what,"), n=[used/expected/rcvd]"), bty="n", cex=0.8)
+#  legend(x=valMin,y=yMax, legendProt, lty=1, col=legendSym, pch=legendSym, title=paste("ECDF(",what,"), n=[used/expected/rcvd]"), bty="n", cex=0.8)
   
   if (statsTable==TRUE) {
-    addtable2plot(valMin,yMax/(1/0.6), stat, display.colnames=FALSE, bty=FALSE, cex=0.8, 
+    addtable2plot(valMin,yMax/(1/0.65), stat, display.colnames=FALSE, bty=FALSE, cex=0.8, 
                   hlines=TRUE, vlines=TRUE,
                   title=paste("proportion [%] <= ",what))  
   }
@@ -339,8 +406,8 @@ argList <- getArgList(list(
                             input=c("data","stat"),
                             plots=c("name","type","groups","desc", "width", "center", "figure", "label")))
 
-inDataFile <- if ( class(argList$data[1])=="character" ) argList$data[1] else "tmp.data"
-inStatFile <- if ( class(argList$stat[1])=="character" ) argList$stat[1] else "tmp.stat"
+inDataFile <- if ( class(argList$data[1])=="character" ) argList$data[1] else "wbmv6.data"
+inStatFile <- if ( class(argList$stat[1])=="character" ) argList$stat[1] else "wbmv6.stat"
 
 D <- read.table( inDataFile, header=TRUE)
 S <- read.table( inStatFile, header=TRUE)
@@ -369,7 +436,7 @@ if (length(argList$name)>=1) {
     d <- getSubset( D, "GRP", groups)
     s <- getSubset( S, "GRP", groups)
     
-    if (length(argList$type) >= i) {
+    if (!is.na(argList$type[i])) {
       
       pdfFile <- FALSE
       if (!is.na(argList$name[i]) >= i && !is.na(argList$imgdir[1])) {

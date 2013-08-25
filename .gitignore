@@ -1,0 +1,9 @@
+img/
+downloads*
+test_data
+.RData
+.Rhistory
+tex/*.aux
+tex/*.log
+tex/*.out
+tex/*.toc

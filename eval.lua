@@ -46,12 +46,20 @@ local protocols={ ["olsr"]   = "fdba:11:",
 		  ["bmx6"]   = "fdba:12:"
 		}
 
+local function tableLength(t)
+	assert(type(t)=="table")
+	local n,c=0,0
+	for n in pairs(t) do c=c+1 end
+	return c
+end
+
 local in_begin_keyword1="PING .* data bytes"
 local in_end_keyword1="Terminated"
 
 local in_failure_keyword="ping: sendmsg: Network is unreachable"
 
-local min_pings=400
+local min_pings = 400
+local min_protocols = tableLength(protocols)
 
 local MAX_TTL=64
 
@@ -110,19 +118,10 @@ local function init_ping()
 	}
 end
 
-local function tableLength(t)
-	assert(type(t)=="table")
-	local c=0
-	local n
-	for n in pairs(t) do
-		c=c+1
-	end
-	return c
-end
 
 local global_data = { prev_nodeid=nil, prev_exp=nil, curr_group=0, curr_pings=nil }
 
-local function eval_pings(ping )
+local function eval_pings( ping )
 	
 	if false and ping and ping.file then
 		print("Summary: log=".. ping.file .." bytes="..(ping.bytes or "NA") .. " addr="..(ping.addr or "NA") ..
@@ -137,87 +136,89 @@ local function eval_pings(ping )
 	if type(ping)=="table" and type(tonumber(ping.max_seq))=="number" and ping.max_seq >= min_pings then
 		
 		if global_data.prev_nodeid ~= ping.node_id or global_data.prev_exp ~= ping.exp then
-
+			
+			
+			if global_data.curr_pings and tableLength(global_data.curr_pings) >= min_protocols then
+				
+				global_data.curr_group = global_data.curr_group + 1
+				
+				
+				for p,a in pairs(global_data.curr_pings) do
+					
+					assert( type(global_data.curr_pings[p])=="table" )
+					
+					local ping = global_data.curr_pings[p]
+	
+					ping.maxSeq =
+						(ping.maxTime and ping.pstats and ping.pstats.time_ms and tonumber(ping.pstats.time_ms) > ping.maxTime) and
+						((ping.max_seq * ping.maxTime) / ping.pstats.time_ms) or (ping.max_seq)
+	
+					
+					for i = 1,((ping.minSeq and ping.minSeq > ping.maxSeq) and ping.minSeq or ping.maxSeq) do
+							
+						if i <= ping.maxSeq and ping.data_table[i] then
+							
+							out_data_fd:write(string.format(data_lin_format,
+									  i,
+									  ping.prot,
+									  ping.node_id,
+									  ping.exp,
+									  global_data.curr_group,
+									  ping.data_table[i].time,
+									  ping.data_table[i].ttl,
+									  ping.data_table[i].hop
+									  ))							 
+						else
+							out_data_fd:write(string.format(data_lin_format,
+									  i,
+									  ping.prot,
+									  ping.node_id,
+									  ping.exp,
+									  global_data.curr_group,
+									  "NA", "NA", "NA"
+									  ))
+						end
+					end
+					
+					out_stat_fd:write(string.format(stat_lin_format,
+							  ping.prot,
+							  ping.exp,
+							  ping.node_id,
+							  global_data.curr_group,
+							  (ping.bytes or "NA"),
+	--						  (ping.addr or "NA"),
+							  (ping.pstats and ping.pstats.transmitted or "NA"),
+							  (ping.pstats and ping.pstats.received or "NA"),
+							  (ping.pstats and ping.pstats.loss_percent or "NA"),
+							  (ping.pstats and ping.pstats.time_ms or "NA"),
+							  (ping.maxTime or "NA"),
+							  (ping.minSeq or "NA"),
+							  (ping.maxSeq or "NA"),
+							  ping.max_seq,
+							  ping.unique_succeeds,
+							  ping.double_succeeds,
+	--						  ping.unmatched,
+	--						  ping.lost,
+							  ping.reorders_last,
+							  (ping.max_hop or "NA"),
+	--						  (ping.min_hop or "NA"),
+							  (ping.tot_hop/ping.unique_succeeds),
+							  (ping.min_time or "NA"),
+							  (ping.max_time or "NA"),
+							  (ping.tot_time/ping.unique_succeeds),
+							  ping.file
+							  ) )
+					
+				end
+			end
+			
+			
 			global_data.prev_nodeid = ping.node_id
 			global_data.prev_exp = ping.exp
 			global_data.curr_pings = {}
 		end
 		
 		global_data.curr_pings[ping.prot] = ping
-		
-		if tableLength(global_data.curr_pings) == tableLength(protocols) then
-			
-			global_data.curr_group = global_data.curr_group + 1
-			
-			
-			for p,a in pairs(protocols) do
-				assert( type(global_data.curr_pings[p])=="table" )
-				
-				local ping = global_data.curr_pings[p]
-
-				ping.maxSeq =
-					(ping.maxTime and ping.pstats and ping.pstats.time_ms and tonumber(ping.pstats.time_ms) > ping.maxTime) and
-					((ping.max_seq * ping.maxTime) / ping.pstats.time_ms) or (ping.max_seq)
-
-				
-				for i = 1,((ping.minSeq and ping.minSeq > ping.maxSeq) and ping.minSeq or ping.maxSeq) do
-						
-					if i <= ping.maxSeq and ping.data_table[i] then
-						
-						out_data_fd:write(string.format(data_lin_format,
-								  i,
-								  ping.prot,
-								  ping.node_id,
-								  ping.exp,
-								  global_data.curr_group,
-								  ping.data_table[i].time,
-								  ping.data_table[i].ttl,
-								  ping.data_table[i].hop
-								  ))							 
-					else
-						out_data_fd:write(string.format(data_lin_format,
-								  i,
-								  ping.prot,
-								  ping.node_id,
-								  ping.exp,
-								  global_data.curr_group,
-								  "NA", "NA", "NA"
-								  ))
-					end
-				end
-				
-				out_stat_fd:write(string.format(stat_lin_format,
-						  ping.prot,
-						  ping.exp,
-						  ping.node_id,
-						  global_data.curr_group,
-						  (ping.bytes or "NA"),
---						  (ping.addr or "NA"),
-						  (ping.pstats and ping.pstats.transmitted or "NA"),
-						  (ping.pstats and ping.pstats.received or "NA"),
-						  (ping.pstats and ping.pstats.loss_percent or "NA"),
-						  (ping.pstats and ping.pstats.time_ms or "NA"),
-						  (ping.maxTime or "NA"),
-						  (ping.minSeq or "NA"),
-						  (ping.maxSeq or "NA"),
-						  ping.max_seq,
-						  ping.unique_succeeds,
-						  ping.double_succeeds,
---						  ping.unmatched,
---						  ping.lost,
-						  ping.reorders_last,
-						  (ping.max_hop or "NA"),
---						  (ping.min_hop or "NA"),
-						  (ping.tot_hop/ping.unique_succeeds),
-						  (ping.min_time or "NA"),
-						  (ping.max_time or "NA"),
-						  (ping.tot_time/ping.unique_succeeds),
-						  ping.file
-						  ) )
-
-				
-			end
-		end
 	end
 	
 	return init_ping()

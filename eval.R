@@ -38,10 +38,53 @@ ecdfXElements <- function(data) {
   ecdfXforY(data,ecdfYElements(data))
 }
 
-
+printStats <- function(xlim, ylim, S,D, asLog="") {
+  allProtocols <- levels(D$PROTO)
+  xMin <- xlim[1]
+  xMax <- xlim[2]
+  yMin <- ylim[1]
+  yMax <- ylim[2]
+  
+  content <- array(dim=c((length(allProtocols)+1),5))
+  content[1,] <- c("","succ","used","expect","rcvd")
+  
+  p=1
+  for (prot in allProtocols) {
+    probes <- D[["RTT"]][D$PROTO==prot]
+    content[1+p,] <- c(prot,
+                       sum(!is.na(probes)),
+                       sum(S[["maxSeq"]][S$PROTO==prot]),
+                       length(probes),
+                       sum(S[["SEQMAX"]][S$PROTO==prot])
+    )
+    p=p+1
+  }
+  
+  groups <- as.integer(levels(factor(S[["GRP"]])))
+  
+  nodes <- c()
+  for (n in S[["NODE"]]) {
+    if (length(nodes)==0 || nodes[length(nodes)]!=n) {
+      nodes <- c(nodes,n)
+    }
+  }
+  
+  if(str_detect(asLog,"x"))
+    xPos <- 10^(log10(xMin)+((log10(xMax)-log10(xMin))/5))
+  else
+    xPos <- xMin+((xMax-xMin)/5)
+  
+#  xPos <- xMin + (( (10^((log10(xMax)-log10(xMin))/5)) else xPos/5))
+  addtable2plot(xPos, yMax, table=content, xjust=0, yjust=0, display.colnames=FALSE, bty=FALSE, cex=0.8, 
+                hlines=TRUE, vlines=TRUE,
+                title=( paste("groups=",paste(groups,sep="",collapse=","),
+                              (if(length(nodes)>3) "" else paste(" to=",paste(nodes,sep="",collapse=","), sep="" ))
+                              , sep="" ) ) )
+}
 
 rttVsHops <- function (S,D) {
   allProtocols <- levels(D$PROTO)
+  xlabHopMin <- 5
   
   rttMax <- 0
   hopMax <- 0
@@ -52,10 +95,7 @@ rttVsHops <- function (S,D) {
   hopProbes <- list()
   histProt   <- c()
   
-  legendProt=c()
-  legendSym=c()  
-  
-  baseSymbol=1
+  p=1
   for (prot in allProtocols) {
     rttProbes[[prot]] <- D[["RTT"]][D$PROTO==prot]
     hopProbes[[prot]] <- D[["HOPS"]][D$PROTO==prot]
@@ -64,41 +104,37 @@ rttVsHops <- function (S,D) {
     rttMax <- max(c(rttMax,rttProbes[[prot]][!is.na(rttProbes[[prot]])]))
     lenMax <- max(c(lenMax,length(hopProbes[[prot]])))
     hstMax <- max(c(hstMax,length(hopProbes[[prot]][!is.na(hopProbes[[prot]])])))    
-    baseSymbol=baseSymbol+1
+    p=p+1
   }
   
-  baseSymbol=1
+  p=1
   for (prot in allProtocols) {
-    legendProt <- c(legendProt, 
-                    paste(prot, " n=",
-                          sum(S[["maxSeq"]][S$PROTO==prot]),"/",
-                          length(rttProbes[[prot]]),"/",
-                          sum(S[["SEQMAX"]][S$PROTO==prot]), sep=""))
-    legendSym  <- c(legendSym,  baseSymbol)
-    
-    histProt[[prot]] <- hist( hopProbes[[prot]]+((baseSymbol-0.5-(length(allProtocols)/2))/10), seq(0,hopMax+1,0.1), plot=F )
-    
-    baseSymbol=baseSymbol+1
+    histProt[[prot]] <- hist( hopProbes[[prot]]+((p-0.5-(length(allProtocols)/2))/10), seq(0,hopMax+1,0.1), plot=F )  
+    p=p+1
   }
   
   par(mar=c(5,4,4,5)+.1, ylog=TRUE)
-  plot(rep(rttMax,hopMax), type="n", log="y", ylim=c(1,rttMax), xlim=c(0.5,hopMax+0.5), ylab="RTT", xlab="hops")
-  baseSymbol=1
+  xlim=c(0.7,max(c(xlabHopMin,hopMax))+0.3)
+  ylim=c(1,rttMax)
+  plot(rep(rttMax,hopMax), type="n", log="y", ylim=ylim, xlim=xlim, ylab="RTT [ms]", xlab="hops")
+  p=1
   for (prot in allProtocols) {
-    points(hopProbes[[prot]]+((baseSymbol-0.5-(length(allProtocols)/2))/10), rttProbes[[prot]], 
-           type="p",pch=3,cex=0.2,col=baseSymbol)
-    baseSymbol=baseSymbol+1
+    points(hopProbes[[prot]]+((p-0.5-(length(allProtocols)/2))/10), rttProbes[[prot]], 
+           type="p",pch=3,cex=0.2,col=p)
+    p=p+1
   }
   
-  legend("topleft",  title=paste("RTT(hops), n=[used/expected/rcvd]"), bty="n",  legendProt, pch=3, col=legendSym, cex=0.8)
+  legend("topleft",  xjust=0, yjust=0, title="RTT", bty="n",  allProtocols, pch=3, col=seq(1,length(allProtocols)), cex=0.8)
+  
+  printStats(xlim, ylim, S, D)
     
   
   par(new=TRUE)
-  baseSymbol=1
+  p=1
   for (prot in allProtocols) {
-    plot(histProt[[prot]], col=colors[baseSymbol], ylim=c(0,hstMax), xlim=c(0.5,hopMax+0.5), add=(baseSymbol!=1), 
+    plot(histProt[[prot]], col=colors[p], ylim=c(0,hstMax), xlim=xlim, add=(p!=1), 
          main="", xlab="", ylab="", axes=F)
-    baseSymbol=baseSymbol+1
+    p=p+1
   }
   axis(4)
   mtext("Frequency",side=4,line=3)
@@ -116,8 +152,6 @@ timeData <- function(S, D) {
   lenMax <- 0
   rttProbes <- list()
   hopProbes <- list()
-  legendProt=c()
-  legendSym=c()  
   
   for (prot in allProtocols) {
     rttProbes[[prot]] <- D[["RTT"]][D$PROTO==prot]
@@ -128,42 +162,32 @@ timeData <- function(S, D) {
     lenMax <- max(c(lenMax,length(rttProbes[[prot]])))
   }
 
-  baseSymbol=1
-  for (prot in allProtocols) {
-#    length(rttProbes[[prot]]) <- lenMax
-#    length(hopProbes[[prot]]) <- lenMax
-    legendProt <- c(legendProt, 
-        paste(prot, " n=",
-              sum(S[["maxSeq"]][S$PROTO==prot]),"/",
-              length(rttProbes[[prot]]),"/",
-              sum(S[["SEQMAX"]][S$PROTO==prot]), sep=""))
-    legendSym  <- c(legendSym,  baseSymbol)
-    baseSymbol=baseSymbol+1
-  }
+  xlim=c(1,lenMax)
+  ylim=c(1,rttMax)
   
   par(mar=c(5,4,4,5)+.1, ylog=TRUE)
-  plot(rep(rttMax,lenMax), type="n", log="y", ylim=c(1,rttMax), ylab="")
-  baseSymbol=1
+  plot(rep(rttMax,lenMax), type="n", log="y", xlim=xlim, ylim=ylim, ylab="")
+  p=1
   for (prot in allProtocols) {
-    points(rttProbes[[prot]], type="p",pch=3,cex=0.2,col=baseSymbol)
-    baseSymbol=baseSymbol+1
+    points(rttProbes[[prot]], type="p",pch=3,cex=0.2,col=p)
+    p=p+1
   }
 
+  mtext("RTT [ms]",side=2,line=3)
+  legend("topleft",  title="RTT", bty="n", allProtocols, pch=3, col=seq(1,length(allProtocols)), cex=0.8)
+  printStats(xlim, ylim, S, D)
   
   par(new=TRUE)
   plot(rep(hopMax,lenMax), type="n", ylim=c(1,hopMax), axes=F, ylab="", xlab="")
-  baseSymbol=1
+  p=1
   for (prot in allProtocols) {
-    lines((hopProbes[[prot]])+(baseSymbol/20), type="l",lwd=3,col=baseSymbol)
-    baseSymbol=baseSymbol+1
+    lines((hopProbes[[prot]])+(p/20), type="l",lwd=3,col=p)
+    p=p+1
   }
-  
-  axis(4)
-  mtext("RTT(index)",side=2,line=3)
-  legend("topleft",  title=paste("RTT, n=[used/expected/rcvd]"), bty="n",  legendProt, pch=3, col=legendSym, cex=0.8)
-  mtext("HOPS(index)",side=4,line=3)
-  legend("topright", title="HOPS", bty="n", allProtocols, lty=1, col=legendSym, cex=0.8)
-  #  legend("topleft",col=c("red","blue"),lty=1,pch=3,legend=c("y1","y2"))  
+
+  axis(4)  
+  mtext("HOPS",side=4,line=3)
+  legend("topright", title="HOPS", bty="n", allProtocols, lty=1, col=seq(1,length(allProtocols)), cex=0.8)
 }
 
 
@@ -202,7 +226,7 @@ ecdfData <- function(S,D, what, xLabel, asLog, sameLen, scatterPlot, statsTable,
     lenProt[[prot]] <- length(probes)
   }
   
-  baseSymbol=1
+  p=1
   for (prot in allProtocols) {
     probes         <- D[[what]][D$PROTO==prot]
     
@@ -215,18 +239,13 @@ ecdfData <- function(S,D, what, xLabel, asLog, sameLen, scatterPlot, statsTable,
     allVals        <- c(allVals,   probesAllValid)
     allGroups      <- c(allGroups, rep(prot, numsTotal))
     
-    legendProt <- c(legendProt, 
-                    paste(prot, " n=",
-                          sum(S[["maxSeq"]][S$PROTO==prot]),"/",
-                          length(probes),"/",
-                          sum(S[["SEQMAX"]][S$PROTO==prot]), sep=""))
-    legendSym  <- c(legendSym,  baseSymbol)    
-    baseSymbol=baseSymbol+1
+    p=p+1
   }
   
-  
+  xlim=c(valMin,valMax)
+  ylim=(c(0,yMax))
   par(mar=c(5,5,2,5), xlog=TRUE)
-  plot.ecdf( valMax*2, xlim=c(valMin,valMax), ylim=(c(0,yMax)), verticals=FALSE, do.points=FALSE, 
+  plot.ecdf( valMax*2, xlim=xlim, ylim=ylim, verticals=FALSE, do.points=FALSE, 
              xlab=xLabel, ylab="ECDF", main="", 
              log=asLog,
              add=FALSE )
@@ -247,60 +266,37 @@ ecdfData <- function(S,D, what, xLabel, asLog, sameLen, scatterPlot, statsTable,
   stat[1,] <- c(NA,paste(" ",qx))
   
   
-  baseSymbol=1
+  p=1
   for (prot in allProtocols) {
     V <- allVals[allGroups==prot]
-    E <- ecdf(V)
-    plot(E, col=baseSymbol, lty=1, cex.lab=1, cex.axis=1, lwd=2,
-         verticals=TRUE, do.points=TRUE, pch=3, cex=0.4, add=TRUE)
-    
-    qp <- array(c(quantile(E,probs=qy),qy), dim=c(length(qy),2))
-    #   points(qp, pch=baseSymbol, col=baseSymbol)
-    #   abline(v=qp[,1], col=baseSymbol)
-    
-    
-#   points(ecdfXforY(V,qy), qy, col=baseSymbol, pch=baseSymbol, lwd=2, cex=1.5)
-    qxy <- ecdfYforX(V,qx)
-    points(qx, qxy, col=baseSymbol, pch=baseSymbol, lwd=2, cex=1.5)
-#   text(qx,qxy,paste(qxy,"%"),adj=c(0,0),cex=0.8)
- 
-    stat[baseSymbol+1,] <- c(prot, paste(" ",as.integer(qxy*100)))
-    baseSymbol=baseSymbol+1
+    if (sum(!is.na(V))>=1) {
+      E <- ecdf(V)
+      plot(E, col=p, lty=1, cex.lab=1, cex.axis=1, lwd=2,
+           verticals=TRUE, do.points=TRUE, pch=3, cex=0.4, add=TRUE)
+      
+      qp <- array(c(quantile(E,probs=qy),qy), dim=c(length(qy),2))
+      #   points(qp, pch=p, col=p)
+      #   abline(v=qp[,1], col=p)
+      
+      
+  #   points(ecdfXforY(V,qy), qy, col=p, pch=p, lwd=2, cex=1.5)
+      qxy <- ecdfYforX(V,qx)
+      points(qx, qxy, col=p, pch=p, lwd=2, cex=1.5)
+  #   text(qx,qxy,paste(qxy,"%"),adj=c(0,0),cex=0.8)
+   
+      stat[p+1,] <- c(prot, paste(" ",as.integer(qxy*100)))
+    }
+    p=p+1
   }
-  legend("topleft", legendProt, lty=1, col=legendSym, pch=legendSym, title=paste("ECDF(",what,"), n=[used/expected/rcvd]"), bty="n", cex=0.8)
-#  legend(x=valMin,y=yMax, legendProt, lty=1, col=legendSym, pch=legendSym, title=paste("ECDF(",what,"), n=[used/expected/rcvd]"), bty="n", cex=0.8)
+  legend("topleft", allProtocols, lty=1, col=seq(1,length(allProtocols)), pch=seq(1,length(allProtocols)), title="ECDF", bty="n", cex=0.8)
+  printStats(xlim, ylim, S, D, asLog)
+  
   
   if (statsTable==TRUE) {
     addtable2plot(valMin,yMax/(1/0.65), stat, display.colnames=FALSE, bty=FALSE, cex=0.8, 
                   hlines=TRUE, vlines=TRUE,
                   title=paste("proportion [%] <= ",what))  
   }
-  
-  if (scatterPlot==TRUE) {
-#    par(new=TRUE)
-    baseSymbol=1
-    for (prot in allProtocols) {
-      points( (D[["HOPS"]][D$PROTO==prot] + ((baseSymbol-2)/10)),
-              (D[["RTT"]][D$PROTO==prot]) / 10,
-              pch=3,#baseSymbol,
-              cex=0.5,
-              col=baseSymbol )
-      
-      baseSymbol=baseSymbol+1
-    }
-    mtext("RTT [10ms]",side=4,line=3)
-    legend("bottomright", legendProt, pch=3, col=legendSym, title="RTT", cex=0.8)
-  }  
-  
-
-  
-  
-#  Ecdf( allVals, 
-#        xlab=what, 
-#        group=allGroups, 
-#        label.curves=list(keys=1:length(allProtocols)),
-#        q=c(0.5),
-#        xlim=c(valMin-1,valMax/100))
 }
 
 
@@ -409,8 +405,10 @@ argList <- getArgList(list(
 inDataFile <- if ( class(argList$data[1])=="character" ) argList$data[1] else "wbmv6.data"
 inStatFile <- if ( class(argList$stat[1])=="character" ) argList$stat[1] else "wbmv6.stat"
 
-D <- read.table( inDataFile, header=TRUE)
-S <- read.table( inStatFile, header=TRUE)
+#if (!exists("D") || !exists("S")) {
+  D <- read.table( inDataFile, header=TRUE)
+  S <- read.table( inStatFile, header=TRUE)
+#}
 
 
 

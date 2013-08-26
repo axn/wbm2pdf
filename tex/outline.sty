@@ -70,11 +70,31 @@
  \label{#1}
 }
 
+\newcommand{\makeCCCGraphic}[1]{
+ \includegraphics[width=0.35\textwidth]{../img/#1rtt.pdf} &
+ \includegraphics[width=0.35\textwidth]{../img/#1rvh.pdf} &
+ \includegraphics[width=0.35\textwidth]{../img/#1tim.pdf} \\
+}
+
+
+\newcommand{\makeTCCGraphic}[1]{
+      \makeGraphic{#1rtt} & \makeGraphic{#1tim} \\
+      \makeGraphic{#1hop} & \makeGraphic{#1rvh} \\
+}
+
 \newcommand{\makeCCTabl}[3]{
-\begin{table}[h!] \begin{center} \begin{tabular}{ c c }
+\begin{table}[ht!] \begin{center} \begin{tabular}{ c c }
       #3
 \end{tabular} \label{#1} \caption{#2} 
 \end{center} \end{table}
+}
+
+\newcommand{\makeCCCTabl}[3]{
+\begin{table}[ht!] \begin{center} \begin{tabular}{ c c c }
+      #3
+\end{tabular} \label{#1} \caption{#2} 
+\end{center} \end{table}
+\clearpage
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

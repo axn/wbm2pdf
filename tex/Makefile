@@ -11,7 +11,7 @@ rawData = downloads.battlemesh.org/WBMv6/test_data/
 
 
 
-$(docname).pdf : $(docname).tex $(figures) $(autofig)
+$(docname).pdf : $(docname).tex $(figures) $(autofig) outline.sty
 	pdflatex $(docname).tex && pdflatex $(docname).tex
 
 
@@ -23,118 +23,39 @@ $(figures) :
 	inkscape -D -z --file=topo0.svg --export-pdf=topo0.pdf }
 
 
-$(autofig) : Makefile ../eval.R ../wbmv6.data ../wbmv6.stat
+$(autofig) : ../eval.R ../ping.data ../ping.stat
 	rm -f $(autofig)
-	../eval.R --data=../wbmv6.data --stat=../wbmv6.stat --imgdir=../img  \
+	../eval.R --data=../ping.data --stat=../ping.stat --imgdir=../img  \
+\
+--name=mArtt --type=ecdfVsRtt  --groups="1,2,3" \
+--name=mArvh --type=rttVsHops  --groups="1,2,3" \
+\
 --name=m0rtt --type=ecdfVsRtt  --groups=1 \
 --name=m0tim --type=dataVsTime --groups=1 \
 --name=m0hop --type=ecdfVsHops --groups=1 \
 --name=m0rvh --type=rttVsHops  --groups=1 \
-\
---name=sArtt --type=ecdfVsRtt  --groups='4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21' \
---name=sArvh --type=rttVsHops  --groups='4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21' \
---name=sBrtt --type=ecdfVsRtt  --groups='22,23,24,25,26,27,28'                            \
---name=sBrvh --type=rttVsHops  --groups='22,23,24,25,26,27,28'                            \
-\
---name=s4rtt --type=ecdfVsRtt  --groups=4 \
---name=s4rvh --type=rttVsHops  --groups=4 \
---name=s5rtt --type=ecdfVsRtt  --groups=5 \
---name=s5rvh --type=rttVsHops  --groups=5 \
---name=s6rtt --type=ecdfVsRtt  --groups=6 \
---name=s6rvh --type=rttVsHops  --groups=6 \
---name=s7rtt --type=ecdfVsRtt  --groups=7 \
---name=s7rvh --type=rttVsHops  --groups=7 \
---name=s8rtt --type=ecdfVsRtt  --groups=8 \
---name=s8rvh --type=rttVsHops  --groups=8 \
---name=s9rtt --type=ecdfVsRtt  --groups=9 \
---name=s9rvh --type=rttVsHops  --groups=9 \
---name=s10rtt --type=ecdfVsRtt  --groups=10 \
---name=s10rvh --type=rttVsHops  --groups=10 \
---name=s11rtt --type=ecdfVsRtt  --groups=11 \
---name=s11rvh --type=rttVsHops  --groups=11 \
---name=s12rtt --type=ecdfVsRtt  --groups=12 \
---name=s12rvh --type=rttVsHops  --groups=12 \
---name=s13rtt --type=ecdfVsRtt  --groups=13 \
---name=s13rvh --type=rttVsHops  --groups=13 \
---name=s14rtt --type=ecdfVsRtt  --groups=14 \
---name=s14rvh --type=rttVsHops  --groups=14 \
---name=s15rtt --type=ecdfVsRtt  --groups=15 \
---name=s15rvh --type=rttVsHops  --groups=15 \
---name=s16rtt --type=ecdfVsRtt  --groups=16 \
---name=s16rvh --type=rttVsHops  --groups=16 \
---name=s17rtt --type=ecdfVsRtt  --groups=17 \
---name=s17rvh --type=rttVsHops  --groups=17 \
---name=s18rtt --type=ecdfVsRtt  --groups=18 \
---name=s18rvh --type=rttVsHops  --groups=18 \
---name=s19rtt --type=ecdfVsRtt  --groups=19 \
---name=s19rvh --type=rttVsHops  --groups=19 \
---name=s20rtt --type=ecdfVsRtt  --groups=20 \
---name=s20rvh --type=rttVsHops  --groups=20 \
---name=s21rtt --type=ecdfVsRtt  --groups=21 \
---name=s21rvh --type=rttVsHops  --groups=21 \
-\
---name=s22rtt --type=ecdfVsRtt  --groups=22 \
---name=s22rvh --type=rttVsHops  --groups=22 \
---name=s23rtt --type=ecdfVsRtt  --groups=23 \
---name=s23rvh --type=rttVsHops  --groups=23 \
---name=s24rtt --type=ecdfVsRtt  --groups=24 \
---name=s24rvh --type=rttVsHops  --groups=24 \
---name=s25rtt --type=ecdfVsRtt  --groups=25 \
---name=s25rvh --type=rttVsHops  --groups=25 \
---name=s26rtt --type=ecdfVsRtt  --groups=26 \
---name=s26rvh --type=rttVsHops  --groups=26 \
---name=s27rtt --type=ecdfVsRtt  --groups=27 \
---name=s27rvh --type=rttVsHops  --groups=27 \
---name=s28rtt --type=ecdfVsRtt  --groups=28 \
---name=s28rvh --type=rttVsHops  --groups=28 \
-
-
-not_now :
-	\
-\
 --name=m1rtt --type=ecdfVsRtt  --groups=2 \
 --name=m1tim --type=dataVsTime --groups=2 \
-\
+--name=m1hop --type=ecdfVsHops --groups=2 \
+--name=m1rvh --type=rttVsHops  --groups=2 \
 --name=m2rtt --type=ecdfVsRtt  --groups=3 \
 --name=m2tim --type=dataVsTime --groups=3 \
+--name=m2hop --type=ecdfVsHops --groups=3 \
+--name=m2rvh --type=rttVsHops  --groups=3 \
 \
---name=s4rtt --type=ecdfVsRtt  --groups=4 \
---name=m4rvh --type=rttVsHops  --groups=4 \
---name=s5rtt --type=ecdfVsRtt  --groups=5 \
---name=s6rtt --type=ecdfVsRtt  --groups=6 \
---name=s7rtt --type=ecdfVsRtt  --groups=7 \
---name=s8rtt --type=ecdfVsRtt  --groups=8 \
---name=s9rtt --type=ecdfVsRtt  --groups=9 \
+--name=sABrtt --type=ecdfVsRtt  --groups='5,6,7,8,9,10,13,15,17,18,19,23,24,25,26,27,28,30,32,34,35,36,37,38,39' \
+--name=sABrvh --type=rttVsHops  --groups='5,6,7,8,9,10,13,15,17,18,19,23,24,25,26,27,28,30,32,34,35,36,37,38,39' \
+--name=sArtt --type=ecdfVsRtt  --groups='5,6,7,8,9,10,13,15,17,18,19,23,24,25,26,27,28,30' \
+--name=sArvh --type=rttVsHops  --groups='5,6,7,8,9,10,13,15,17,18,19,23,24,25,26,27,28,30' \
+--name=sBrtt --type=ecdfVsRtt  --groups='32,34,35,36,37,38,39' \
+--name=sBrvh --type=rttVsHops  --groups='32,34,35,36,37,38,39' \
 \
---name=sArtt --type=ecdfVsRtt  --groups='4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21' \
---name=sBrtt --type=ecdfVsRtt  --groups='22,23,24,25,26,27,28'                            \
-\
---name=s10rtt --type=ecdfVsRtt  --groups=10 \
---name=s11rtt --type=ecdfVsRtt  --groups=11 \
---name=s12rtt --type=ecdfVsRtt  --groups=12 \
---name=s13rtt --type=ecdfVsRtt  --groups=13 \
---name=s14rtt --type=ecdfVsRtt  --groups=14 \
---name=s15rtt --type=ecdfVsRtt  --groups=15 \
---name=s16rtt --type=ecdfVsRtt  --groups=16 \
---name=s17rtt --type=ecdfVsRtt  --groups=17 \
---name=s18rtt --type=ecdfVsRtt  --groups=18 \
---name=s19rtt --type=ecdfVsRtt  --groups=19 \
---name=s20rtt --type=ecdfVsRtt  --groups=20 \
---name=s21rtt --type=ecdfVsRtt  --groups=21 \
---name=s22rtt --type=ecdfVsRtt  --groups=22 \
---name=s23rtt --type=ecdfVsRtt  --groups=23 \
---name=s24rtt --type=ecdfVsRtt  --groups=24 \
---name=s25rtt --type=ecdfVsRtt  --groups=25 \
---name=s26rtt --type=ecdfVsRtt  --groups=26 \
---name=s27rtt --type=ecdfVsRtt  --groups=27 \
---name=s28rtt --type=ecdfVsRtt  --groups=28 \
+$$( for i in $$(seq 4 50); do echo -n "--name=s$${i}rtt --type=ecdfVsRtt --groups=$$i  --name=s$${i}rvh --type=rttVsHops --groups=$$i  --name=s$${i}tim --type=dataVsTime --groups=$$i  "; done  )
 
 
 
-
-
-../wbmv6.stat ../wbmv6.data : ../eval.lua ../test_data
-	cd .. && ./eval.lua
+../ping.stat ../ping.data : ../ping.lua ../test_data
+	cd .. && ./ping.lua
 
 
 ../test_data : 
@@ -142,11 +63,13 @@ not_now :
 	ln -s $(rawData) test_data && \
 	cd test_data && \
 	for i in $$( ls *.tar.gz ); do tar -xzvf $$i; done && \
-	cd random_ping_test1 && for f in $$(ls ping_test_olsr_* | awk -F'_' '{print $$4}' ); do cat *$$f >> screenlog.1; done
+	cd  ./random_ping_test1 && for f in $$(ls | awk -F'_' '{print $$4}' | sort -u ); do cat *$$f >> screenlog.all; done && \
+	cd ../random_ping_test2 && for f in $$(ls | awk -F'_' '{print $$4}' | sort -u ); do cat *$$f >> screenlog.all; done
 
 
 clean_data : 
-	cd .. && rm -rf $$( echo $(rawData) | awk -F'/' '{print $$1}' ) test_data ../wbmv6.stst ../wbmv6.data
+	rm -rf ../$$( echo $(rawData) | awk -F'/' '{print $$1}' ) 
+	rm -f test_data ../ping.stat ../ping.data
 
 clean_autofig : 
 	rm -f $(autofig)
@@ -158,4 +81,4 @@ clean_all :
 	make clean_data
 	make clean_autofig
 	make clean_figures
-	rm -f $(docname).pdf
+	rm -f $(docname).pdf $(docname).log $(docname).out $(docname).aux $(docname).toc 

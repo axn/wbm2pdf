@@ -178,7 +178,7 @@ timeData <- function(S, D) {
   printStats(xlim, ylim, S, D)
   
   par(new=TRUE)
-  plot(rep(hopMax,lenMax), type="n", ylim=c(1,hopMax), axes=F, ylab="", xlab="")
+  plot(rep(hopMax,lenMax), type="n", ylim=c(1,max(6,hopMax)+0.5), axes=F, ylab="", xlab="")
   p=1
   for (prot in allProtocols) {
     lines((hopProbes[[prot]])+(p/20), type="l",lwd=3,col=p)

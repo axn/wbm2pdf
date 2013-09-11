@@ -378,6 +378,22 @@ rtt min/avg/max/mdev = 800.144/919.743/2202.364/353.556 ms, pipe 14
 \label{sec:tp-measurements}
 
 
+
+
+\section{Recommendations for next battlemesh}
+
+\begin{itemize}
+
+\item Terminate running pings with SIGINT (eg killall -SIGINT ping6) instead of SIGKILL (eg killall ping6). This will cause ping to still print the ping statistics
+
+\item Run top so that it makes a second measurement over a reasonable time (eg 5 seconds). Otherwise the cpu measurements are useless as they only present the cpu usage over a fraction of a second. This can be achieved with arguments "top -b -n 2 -d 2 "
+
+\item Traceroute and mrt often show  high packet for intermediate nodes. This is due to a kind of denial-of-service mechanism enabled by default in Linux kernel. WIth this mechanism the kernel simply discards frequent icmp responses (eg due to exceeded TTL values). This behavior can be disabled by lowering the default net.ipv6.icmp.ratelimit=1000 setting, eg via: sysctl -w net.ipv6.icmp.ratelimit=10
+
+\item Most important: Measure protocol traffic overhead in parallel
+\end{itemize}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

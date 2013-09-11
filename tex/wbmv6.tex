@@ -13,6 +13,16 @@
 \usepackage[lined,ruled,longend]{algorithm2e}
 \usepackage{longtable}
 
+
+%\usepackage[dvipsnames]{xcolor}
+
+\usepackage{rotating}
+
+\usepackage{fancyvrb}
+
+
+
+
 \clubpenalty=1000
 \widowpenalty=1000
 
@@ -59,7 +69,7 @@ Version 6}
 \eventlocation{Aalborg University. Aalborg, Denmark}
 \eventdates{15th to 21st of April 2013}
 \eventurl{http://battlemesh.org/BattleMeshV6}
-\doctype{measurement report}
+\doctype{Measurement Analysis (work in progress)}
 \logofigure{figures/battlemeshv6}
 
 \frontmatter
@@ -117,16 +127,18 @@ WBM...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Protocols}
+% A summary of protocol itself, the used versions and configuration
+
+%\section{Protocols}
 
 
-\subsection{Babel}
+%\subsection{Babel}
 
-\subsection{Batman-adv}
+%\subsection{Batman-adv}
 
-\subsection{Bmx6}
+%\subsection{Bmx6}
 
-\subsection{OLSR}
+%\subsection{OLSR}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -164,6 +176,7 @@ WBM...
 %\includesvg{topo0}
 %\end{figure}
 
+\clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -176,16 +189,93 @@ WBM...
 
 
 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\immediate\write18{ ../eval.R --data=../tmp.data --stat=../tmp.stat --imgdir=../img --texdir=inputs/ }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Stationary Scenarios}
 
-\makeFigure{sArtt}{Random node test 1}{0.7}
-\makeFigure{sArvh}{Random node test 1}{0.7}
-\makeFigure{sBrtt}{Random node test 2}{0.7}
-\makeFigure{sBrvh}{Random node test 2}{0.7}
+\clearpage
+\makeFigure{sArtt}{Random node test 1}{0.69}
+\makeFigure{sArvh}{Random node test 1}{0.69}
+
+\clearpage
+
+\makeFigure{sBrtt}{Random node test 2}{0.69}
+\makeFigure{sBrvh}{Random node test 2}{0.69}
+
+
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Mobile Scenarios}
+
+
+%\makeFigure{sArtt}{RTT ECDF of mobile and running node tests (groups 1-3)}{0.7}
+%\makeFigure{sArvh}{RTT vs hops of Mobile and running node tests (groups 1-3)}{0.7}
+
+
+\makeCCTabl{tbl:m0}{Mobile test 0 (group 1)} {%
+      \makeTCCGraphic{m0}
+}
+
+\makeCCTabl{tbl:m1}{Mobile node test 1 (group 2)} {%
+      \makeTCCGraphic{m1}
+}
+
+\makeCCTabl{tbl:m0-m2}{Running node test 2 (group 3)} {%
+      \makeTCCGraphic{m2}
+}
+
+
+
+%\begin{figure}
+% \centering
+% \includegraphics[width=1\textwidth]{../img/out.pdf}
+% \caption{Research guidelines}
+% \label{fig:guidelines}
+%\end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{TCP Throughput Measurements}
+\label{sec:tp-measurements}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Appendix}
+
+\subsection{Ping Results Table}
+
+The folloing verbatim table lists statistics per experiment (EXP) and group (GRP) as calculated by the lua-based
+evaluation script based on the raw ping-measurements data and outputted to the file ping.stat.
+Event based results are given for each received icmp response in ping.data.
+
+% redefine \VerbatimInput
+\RecustomVerbatimCommand{\VerbatimInput}{VerbatimInput}%
+{fontsize=\tiny,
+ %
+ frame=lines,  % top and bottom rule only
+ framesep=2em, % separation between frame and text
+% rulecolor=\color{Gray},
+ %
+ label=\fbox{ping.stat},
+ labelposition=topline,
+ %
+ commandchars=\|\(\), % escape character and argument delimiters for
+                      % commands within the verbatim
+ commentchar=*        % comment character
+}
+
+\VerbatimInput{../ping.stat}
+
+\subsection{Individual Random-node Test Measurements}
 
 \makeCCCTabl{tbl:s4-s6}{Individual Random node tests (groups 4-6)} {%
       \makeCCCGraphic{s4}
@@ -269,50 +359,6 @@ WBM...
       \makeCCCGraphic{s49}
       \makeCCCGraphic{s50}
 }
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Mobile Scenarios}
-
-
-%\makeFigure{sArtt}{RTT ECDF of mobile and running node tests (groups 1-3)}{0.7}
-%\makeFigure{sArvh}{RTT vs hops of Mobile and running node tests (groups 1-3)}{0.7}
-
-
-\makeCCTabl{tbl:m0}{Mobile test 0 (group 1)} {%
-      \makeTCCGraphic{m0}
-}
-
-\makeCCTabl{tbl:m1}{Mobile node test 1 (group 2)} {%
-      \makeTCCGraphic{m1}
-}
-
-\makeCCTabl{tbl:m0-m2}{Running node test 2 (group 3)} {%
-      \makeTCCGraphic{m2}
-}
-
-
-
-%\begin{figure}
-% \centering
-% \includegraphics[width=1\textwidth]{../img/out.pdf}
-% \caption{Research guidelines}
-% \label{fig:guidelines}
-%\end{figure}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{TCP Throughput Measurements}
-\label{sec:tp-measurements}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Appendix}
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

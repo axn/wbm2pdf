@@ -57,7 +57,7 @@
 
 % label, caption, width
 \newcommand{\makeFigure}[3]{
-\begin{figure}
+\begin{figure}[!h]
  \centering
  \includegraphics[width=#3\textwidth]{../img/#1.pdf}
  \caption{#2}
@@ -83,14 +83,15 @@
 }
 
 \newcommand{\makeCCTabl}[3]{
-\begin{table}[ht!] \begin{center} \begin{tabular}{ c c }
+\begin{table}[!h] \begin{center} \begin{tabular}{ c c }
       #3
 \end{tabular} \label{#1} \caption{#2} 
 \end{center} \end{table}
+\clearpage
 }
 
 \newcommand{\makeCCCTabl}[3]{
-\begin{table}[ht!] \begin{center} \begin{tabular}{ c c c }
+\begin{table}[!h] \begin{center} \begin{tabular}{ c c c }
       #3
 \end{tabular} \label{#1} \caption{#2} 
 \end{center} \end{table}
@@ -209,7 +210,7 @@
         \large{\textsc{\@author}}\\%
         \vfill%
         \textbf{
-%            A \@doctype\ created by the \\
+            Type: \@doctype\\%
 %            \textsc{\@contributors}\\%
 %            \vspace*{10mm}
             Creation date: \@date\\%

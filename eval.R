@@ -166,7 +166,7 @@ timeData <- function(S, D) {
   ylim=c(1,rttMax)
   
   par(mar=c(5,4,4,5)+.1, ylog=TRUE)
-  plot(rep(rttMax,lenMax), type="n", log="y", xlim=xlim, ylim=ylim, ylab="")
+  plot(rep(rttMax,lenMax), type="n", log="y", xlim=xlim, ylim=ylim, ylab="", xlab="icmp sequence number")
   p=1
   for (prot in allProtocols) {
     points(rttProbes[[prot]], type="p",pch=3,cex=0.2,col=p)

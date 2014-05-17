@@ -24,16 +24,10 @@ $(figures) :
 $(autofig) ../test_data ../test_data/$(rawData): 
 	mkdir -p ../test_data/$$( echo $(rawData) | awk -F'/' '{print $$1}' )  && \
 	cd       ../test_data/$$( echo $(rawData) | awk -F'/' '{print $$1}' )  && \
+	wget $(rawUrl)/$(rawData) && \
+	tar -xzvf $$( echo $(rawData) | awk -F'/' '{print $$2}' ) && \
 	cd ./$(saveDir) && ../../../ping.lua  && \
 	../../../eval.R --data=./ping.data --stat=./ping.stat --imgdir=../../../img --name=s1rtt --type=ecdfVsRtt --groups=1  --name=s1rvh --type=rttVsHops --groups=1  --name=s1tim --type=dataVsTime --groups=1  
-	echo
-
-#	mkdir -p ../test_data/$$( echo $(rawData) | awk -F'/' '{print $$1}' )  && \
-#	cd       ../test_data/$$( echo $(rawData) | awk -F'/' '{print $$1}' )  && \
-#	wget $(rawUrl)/$(rawData) && \
-#	tar -xzvf $$( echo $(rawData) | awk -F'/' '{print $$2}' ) && \
-#	cd ./$(saveDir) && ../../../ping.lua  && \
-#	../../../eval.R --data=./ping.data --stat=./ping.stat --imgdir=../../../img --name=s1rtt --type=ecdfVsRtt --groups=1  --name=s1rvh --type=rttVsHops --groups=1  --name=s1tim --type=dataVsTime --groups=1  
 
 
 

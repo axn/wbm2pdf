@@ -4,7 +4,10 @@
 library(plotrix)
 library(stringr)
 
+
 colors <- c(rgb(0,0,0,1/3),rgb(1,0,0,1/4),rgb(0,1,0,1/4),rgb(0,0,1,1/3))
+#colors <- c( "black", "red", "green","blue", "darkgoldenrod", "maroon1")
+#colors <- c( "red", "blue", "darkgoldenrod", "maroon1" )
 
 ecdfYforX <- function(data, X) {
 
@@ -74,12 +77,11 @@ printStats <- function(xlim, ylim, S,D, asLog="") {
   else
     xPos <- xMin+((xMax-xMin)/5)
   
-#  xPos <- xMin + (( (10^((log10(xMax)-log10(xMin))/5)) else xPos/5))
-  addtable2plot(xPos, yMax, table=content, xjust=0, yjust=0, display.colnames=FALSE, bty=FALSE, cex=0.8, 
-                hlines=TRUE, vlines=TRUE,
-                title=( paste("groups=",paste(groups,sep="",collapse=","),
-                              (if(length(nodes)>3) "" else paste(" to=",paste(nodes,sep="",collapse=","), sep="" ))
-                              , sep="" ) ) )
+  #addtable2plot(xPos, yMax, table=content, xjust=0, yjust=0, display.colnames=FALSE, bty=FALSE, cex=0.8, 
+  #              hlines=TRUE, vlines=TRUE,
+  #              title=( paste("groups=",paste(groups,sep="",collapse=","),
+  #                            (if(length(nodes)>3) "" else paste(" to=",paste(nodes,sep="",collapse=","), sep="" ))
+  #                            , sep="" ) ) )
 }
 
 rttVsHops <- function (S,D) {
@@ -120,11 +122,11 @@ rttVsHops <- function (S,D) {
   p=1
   for (prot in allProtocols) {
     points(hopProbes[[prot]]+((p-0.5-(length(allProtocols)/2))/10), rttProbes[[prot]], 
-           type="p",pch=3,cex=0.2,col=p)
+           type="p",pch=3,cex=0.2,col=colors[p])
     p=p+1
   }
   
-  legend("topleft",  xjust=0, yjust=0, title="RTT", bty="n",  allProtocols, pch=3, col=seq(1,length(allProtocols)), cex=0.8)
+  legend("topleft",  xjust=0, yjust=0, title="RTT", bty="n",  allProtocols, pch=3, col=colors, cex=0.8)
   
   printStats(xlim, ylim, S, D)
     
@@ -169,25 +171,25 @@ timeData <- function(S, D) {
   plot(rep(rttMax,lenMax), type="n", log="y", xlim=xlim, ylim=ylim, ylab="", xlab="icmp sequence number")
   p=1
   for (prot in allProtocols) {
-    points(rttProbes[[prot]], type="p",pch=3,cex=0.2,col=p)
+    points(rttProbes[[prot]], type="p",pch=3,cex=0.2,col=colors[p])
     p=p+1
   }
 
   mtext("RTT [ms]",side=2,line=3)
-  legend("topleft",  title="RTT", bty="n", allProtocols, pch=3, col=seq(1,length(allProtocols)), cex=0.8)
+  legend("topleft",  title="RTT", bty="n", allProtocols, pch=3, col=colors, cex=0.8)
   printStats(xlim, ylim, S, D)
   
   par(new=TRUE)
   plot(rep(hopMax,lenMax), type="n", ylim=c(1,max(6,hopMax)+0.5), axes=F, ylab="", xlab="")
   p=1
   for (prot in allProtocols) {
-    lines((hopProbes[[prot]])+(p/20), type="l",lwd=3,col=p)
+    lines((hopProbes[[prot]])+(p/20), type="l",lwd=3,col=colors[p])
     p=p+1
   }
 
   axis(4)  
   mtext("HOPS",side=4,line=3)
-  legend("topright", title="HOPS", bty="n", allProtocols, lty=1, col=seq(1,length(allProtocols)), cex=0.8)
+  legend("topright", title="HOPS", bty="n", allProtocols, lty=1, col=colors, cex=0.8)
 }
 
 
@@ -245,7 +247,7 @@ ecdfData <- function(S,D, what, xLabel, asLog, sameLen, scatterPlot, statsTable,
   xlim=c(valMin,valMax)
   ylim=(c(0,yMax))
   par(mar=c(5,5,2,5), xlog=TRUE)
-  plot.ecdf( valMax*2, xlim=xlim, ylim=ylim, verticals=FALSE, do.points=FALSE, 
+  plot.ecdf( valMax*2, xlim=xlim, ylim=ylim, verticals=FALSE, do.points=FALSE,
              xlab=xLabel, ylab="ECDF", main="", 
              log=asLog,
              add=FALSE )
@@ -271,24 +273,25 @@ ecdfData <- function(S,D, what, xLabel, asLog, sameLen, scatterPlot, statsTable,
     V <- allVals[allGroups==prot]
     if (sum(!is.na(V))>=1) {
       E <- ecdf(V)
-      plot(E, col=p, lty=1, cex.lab=1, cex.axis=1, lwd=2,
+      plot(E, col=colors[p], lty=1, cex.lab=1, cex.axis=1, lwd=2,
            verticals=TRUE, do.points=TRUE, pch=3, cex=0.4, add=TRUE)
       
       qp <- array(c(quantile(E,probs=qy),qy), dim=c(length(qy),2))
-      #   points(qp, pch=p, col=p)
-      #   abline(v=qp[,1], col=p)
+      #   points(qp, pch=p, col=colors[p])
+      #   abline(v=qp[,1], col=colors[p])
       
       
-  #   points(ecdfXforY(V,qy), qy, col=p, pch=p, lwd=2, cex=1.5)
+  #   points(ecdfXforY(V,qy), qy, col=colors[p], pch=p, lwd=2, cex=1.5)
       qxy <- ecdfYforX(V,qx)
-      points(qx, qxy, col=p, pch=p, lwd=2, cex=1.5)
+      points(qx, qxy, col=colors[p], pch=p, lwd=2, cex=1.5)
   #   text(qx,qxy,paste(qxy,"%"),adj=c(0,0),cex=0.8)
    
       stat[p+1,] <- c(prot, paste(" ",as.integer(qxy*100)))
     }
     p=p+1
   }
-  legend("topleft", allProtocols, lty=1, col=seq(1,length(allProtocols)), pch=seq(1,length(allProtocols)), title="ECDF", bty="n", cex=0.8)
+
+  legend("topleft", allProtocols, lty=1, col=colors, pch=seq(1,length(allProtocols)), title="ECDF", bty="n", cex=0.8)
   printStats(xlim, ylim, S, D, asLog)
   
   
@@ -405,12 +408,10 @@ argList <- getArgList(list(
 inDataFile <- if ( class(argList$data[1])=="character" ) argList$data[1] else "wbmv6.data"
 inStatFile <- if ( class(argList$stat[1])=="character" ) argList$stat[1] else "wbmv6.stat"
 
-#if (!exists("D") || !exists("S")) {
-  D <- read.table( inDataFile, header=TRUE)
-  S <- read.table( inStatFile, header=TRUE)
-#}
+D <- read.table( inDataFile, header=TRUE)
+S <- read.table( inStatFile, header=TRUE)
 
-
+colors <- c( "red", "blue", "darkgoldenrod", "maroon1" )
 
 if (length(argList$name)>=1) {
   
@@ -455,7 +456,7 @@ if (length(argList$name)>=1) {
       
       
       if (argList$type[i]=="ecdfVsRtt") {
-        ecdfData(s,d,"RTT", "round tip time (RTT) [ms]","x", FALSE, FALSE,TRUE, 1, c(10,100,1000))
+        ecdfData(s,d,"RTT", "round trip time (RTT) [ms]","x", FALSE, FALSE,FALSE, 1, c(10,100,1000))
       } else if (argList$type[i]=="ecdfVsHops") {
         ecdfData(s,d,"HOPS", "number of hops","", FALSE, FALSE,FALSE, 1, c(max(d[["HOPS"]],na.rm=TRUE)))
       } else if (argList$type[i]=="rttVsHops") {

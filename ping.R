@@ -6,8 +6,6 @@ library(stringr)
 
 
 colors <- c(rgb(0,0,0,1/3),rgb(1,0,0,1/4),rgb(0,1,0,1/4),rgb(0,0,1,1/3))
-#colors <- c( "black", "red", "green","blue", "darkgoldenrod", "maroon1")
-#colors <- c( "red", "blue", "darkgoldenrod", "maroon1" )
 
 ecdfYforX <- function(data, X) {
 
@@ -375,6 +373,32 @@ getArgList <- function( argStruct ) {
 }
 
 
+setColors <- function ( D ) {
+
+	  allProtocols <- levels(D$PROTO)
+	  colors <- allProtocols
+
+	  for (i in 1:length(allProtocols)) {
+	      p = allProtocols[i]
+	      if (p == "olsr1") {
+	      	    colors[i] = "blue"
+	      } else if (p == "bmx6") {
+	      	    colors[i] = "green"
+	      } else if (p == "batadv") {
+	      	    colors[i] = "red"
+	      } else if (p == "babel") {
+	      	    colors[i] = "black"
+	      } else if (p == "olsr2") {
+	      	    colors[i] = "maroon1"
+	      } else if (p == "cjdns") {
+	      	    colors[i] = "darkgoldenrod"
+	      } else {
+	      	    colors[i] = "grey"
+	      }
+	  }
+	  colors
+}
+
 createTexFigureSource <- function ( texFile, pdfFile, label=NA, descr=NA, width=NA, center=NA, figure=NA ) {
   
 # label  <- if (!is.na(label) && class(label)=="character") label else ""
@@ -411,7 +435,7 @@ inStatFile <- if ( class(argList$stat[1])=="character" ) argList$stat[1] else "w
 D <- read.table( inDataFile, header=TRUE)
 S <- read.table( inStatFile, header=TRUE)
 
-colors <- c( "red", "blue", "darkgoldenrod", "maroon1" )
+colors <- setColors( D )
 
 if (length(argList$name)>=1) {
   

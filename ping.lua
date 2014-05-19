@@ -15,7 +15,7 @@ local in_log_files={
 	{["file"]="ping6-olsr1.log",   ["exp"]=1, ["minSeq"]=200},
 	{["file"]="ping6-bmx.log",     ["exp"]=1, ["minSeq"]=200},
 	{["file"]="ping6-batadv.log",  ["exp"]=1, ["minSeq"]=200},
-	{["file"]="ping6-babel.log",   ["exp"]=1, ["minSeq"]=200},
+--	{["file"]="ping6-babel.log",   ["exp"]=1, ["minSeq"]=200},
 	{["file"]="ping6-olsr2.log",   ["exp"]=1, ["minSeq"]=200},
 	}
 

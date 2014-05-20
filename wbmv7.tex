@@ -157,6 +157,9 @@ WBM...
 
 \section{Data and System Repositories}
 
+
+
+\scriptsize
 \begin{verbatim}
 http://wibed.confine-project.eu
 
@@ -165,8 +168,13 @@ https://github.com/battlemesh/wibed-battlemesh-experiment (package)
 http://wiki.confine-project.eu/wibed:start
 https://github.com/axn/wbm2pdf  (this stuff, branch wbmv7 in future)
 
-\end{verbatim}
+Raw measurement data:
+http://wibed.confine-project.eu/resultsdir/wbmv7-axn-16_2014-05-16_19-28-43 (stationary scenarios)
+http://wibed.confine-project.eu/resultsdir/wbmv7-axn-17_2014-05-16_20-13-20 (broken crossed streams scenario)
+http://wibed.confine-project.eu/resultsdir/wbmv7-axn-19_2014-05-16_21-35-33 (mobile scenarios)
 
+\end{verbatim}
+\normalsize
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -175,24 +183,27 @@ https://github.com/axn/wbm2pdf  (this stuff, branch wbmv7 in future)
 \subsection{Nodes and Locations}
 
 
+\scriptsize
 \begin{verbatim}
-NodeID  Location
+NodeID  Location               exp:axn-16   exp:axn-17  exp:axn-19
+                               (stationary) (broken)    (mobile)
 164a7a  deathroom
 3b3a90  workshopRoom
 3b3d70  ????
-3e9db0  deathroom??            e16:9db0->1ab0!                   e19:Mob:9db0->4174!
-51aac8  halleAnfang                                              e19:Mob:aac8->4174!
-8a417e  deathroom              e16:417e->4174!  e17:417e->1ab0!
-c24174  DST MOBILE HalleEnde                    e17:4174->1936!
-c2427a  deathroom??                                              e19:Mob:427a->4174
+3e9db0  deathroom??            9db0->1ab0               9db0->4174
+51aac8  halleAnfang                                     aac8->4174
+8a417e  deathroom              417e->4174  417e->1ab0 
+c24174  HalleEnde (mobile)                 4174->1936 
+c2427a  deathroom??                                     427a->4174
 ce3360  EloiTable
 e4b63a  mustiTable
 e60a62  halleMitte
 e60aac  deathroom
 e60ad6  deathroom
-e61936  SRC axelsTable         e16:1936->4174!  e17:1936->4174!  e19:Mob:1936->4174!
-f41ab0  kloschiOffice??        e16:1ab0->4174!  e17:1ab0->417e!  e18:Mob:1ab0->4174!
+e61936  axelsTable             1936->4174  1936->4174   1936->4174
+f41ab0  kloschiOffice??        1ab0->4174  1ab0->417e   1ab0->4174
 \end{verbatim}
+\normalsize
 
 
 \subsection{Topology}
@@ -324,7 +335,6 @@ Event based results are given for each received icmp response in ping.data.
 
 \item Traceroute and mrt often show  high packet for intermediate nodes. This is due to a kind of denial-of-service mechanism enabled by default in Linux kernel. WIth this mechanism the kernel simply discards frequent icmp responses (eg due to exceeded TTL values). This behavior can be disabled by lowering the default net.ipv6.icmp.ratelimit=1000 setting, eg via: sysctl -w net.ipv6.icmp.ratelimit=10
 
-\item Most important: Measure protocol traffic overhead in parallel
 \end{itemize}
 
 

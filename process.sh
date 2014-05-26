@@ -3,7 +3,7 @@
 PING=${1:-YES}
 NETPERF=${2:-YES}
 TOP=${3:-YES}
-OVERHEAD=${4:-YES}
+TCPDUMP=${4:-YES}
 
 HOMEDIR="$(pwd)"
 SAVEDIR="wbm-axn"
@@ -46,6 +46,7 @@ for D in $URLDATA; do
 	wget -c $URLBASE/$D && \
 	( [ -d ./$SAVEDIR ] || tar -xzvf $NODETGZ ) && \
 	cd ./$SAVEDIR && \
+## I don't understand the previous &&
 
     if [ "$PING" == "YES" ]; then
 	../../../../ping.lua  && \
@@ -56,15 +57,18 @@ for D in $URLDATA; do
     fi
 
     if [ "$NETPERF" == "YES" ]; then
-	echo ...
+	../../../../netperf.sh > netperf.data
+	../../../../plotData.R  --vanilla --args --tests="netperf"
     fi
 
     if [ "$TOP" == "YES" ]; then
-	echo ...
+	../../../../top.sh > top.data
+	../../../../plotData.R  --vanilla --args --tests="top"
     fi
 
-    if [ "$OVERHEAD" == "YES" ]; then
-	echo ...
+    if [ "$TCPDUMP" == "YES" ]; then
+	../../../../tcpdump.sh > tcpdump.data
+	../../../../plotData.R  --vanilla --args --tests="tcpdump"
     fi
 
 

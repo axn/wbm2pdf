@@ -21,7 +21,7 @@ DATADIR=${DATADIR:-"."}
 TOPFILE=${TOPFILE:-"top.log"}
 INFILE=${1:-"${DATADIR}/${TOPFILE}"}
 
-#DIR=${1:-"."}
+shift
 PAT1=${1:-"/usr/sbin/olsrd -f /var/etc/olsrd.conf"}
 PAT2=${2:-"/usr/sbin/bmx6 -f /etc/config/bmx6 -d0"}
 PAT3=${3:-"BATMANADVANCE"}
@@ -94,6 +94,6 @@ while read INLINE; do
   
   OUTLINE="${MEM} ${CPU} ${OUT1} ${OUT2} ${OUT3} ${OUT4} ${OUT5}"
   
-done < "${INFILE}"
+done < <(grep "Mem:\|CPU:\|${PAT1}\|${PAT2}\|${PAT3}\|${PAT4}\|${PAT5}" ${INFILE})
 
 printline

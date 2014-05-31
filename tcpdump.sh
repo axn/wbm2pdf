@@ -11,8 +11,6 @@ PROTOS=${PROTOS:-"olsr1 bmx batadv babel olsr2"}
 DATADIR=${DATADIR:-"."}
 TPCDUMPFILE=${TPCDUMPFILE:-"tcpdump.raw"}
 INFILE=${1:-"${DATADIR}/${TPCDUMPFILE}"}
-
-
 INTERVAL=${INTERVAL:-"1"}
 
 
@@ -24,8 +22,13 @@ done
 echo ${LINE}
 
 
-## the first "," is for the total
 ## To add new protos following line must be tunned
-tshark -r ${INFILE} -q -z "io,stat,${INTERVAL},,\
-udp.port==698,udp.port==6240,vlan.etype==0x4305 && data.data[0]==00,udp.port==6696,udp.port==269"\
-| tail -n +14 | head -n -1 | cut -d'-' -f 2- | sed "s/ 0 / NA /g"
+##
+## WARNING: the current one is meant for TShark 1.10.6 (v1.10.6 from master-1.10)
+## we have noticed differences in output formats from one tshark version to another
+## 
+## we have also noticed differences in the filter
+## e.g. in previous verisions a "," after ${INTERVAL}, was needed for the total
+tshark -r ${INFILE} -q -z "io,stat,${INTERVAL},\
+  udp.port==698,udp.port==6240,vlan.etype==0x4305 && data.data[0]==00,udp.port==6696,udp.port==269" \
+  | tail -n +17 | head -n -1 | cut -d'>' -f 2- | tr -d '|' | sed "s/ 0 / NA /g"

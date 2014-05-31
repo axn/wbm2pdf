@@ -12,7 +12,16 @@ PROTOS=${PROTOS:-"olsr1 bmx batadv babel olsr2"}
 DATADIR=${DATADIR:-$1}
 DATADIR=${DATADIR:-"."}
 
-echo "$(pwd)" >&2
+
+PROBES=0
+for proto in ${PROTOS}; do
+  PROBES_=$(ls ${DATADIR}/netperf-${proto}-* | wc -w)
+  if [ "${PROBES_}" -gt "${PROBES}" ]; then PROBES=${PROBES_}; fi
+done
+
+## TODO build PROBES by scaning over PROTOS and selecting the longest; then if PROBES==0 ERROR
+if [ "${PROBES}" -eq "0" ]; then echo "[$0] WARNING: no log files" >&2; fi
+
 
 ## header
 LINE=""
@@ -22,10 +31,7 @@ done
 echo ${LINE}
 
 
-PROVES=$(ls ${DATADIR}/netperf-bmx-* | wc -w)
-## TODO build PROVES by scaning over PROTOS and selecting the longest; then if PROVES==0 ERROR
-
-for it in $(seq 1 ${PROVES}); do
+for it in $(seq 1 ${PROBES}); do
   LINE=""
   for proto in ${PROTOS}; do
     TP=0

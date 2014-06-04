@@ -22,7 +22,11 @@ clean_data :
 clean_figures :
 	rm -f $(figures)
 
+clean_tex:
+	rm -f $(docname).pdf $(docname).log $(docname).out $(docname).aux $(docname).toc 
+
+
 clean_all :
 	make clean_data
 	make clean_figures
-	rm -f $(docname).pdf $(docname).log $(docname).out $(docname).aux $(docname).toc 
+	make clean_tex

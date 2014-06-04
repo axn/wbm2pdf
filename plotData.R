@@ -38,7 +38,7 @@ Example:
 
 knownTests <- c("netperf", "top", "tcpdump") ## used to define testsNames
 knownProtocols <- c("olsr1", "bmx", "batadv", "babel", "olsr2") ## used to define protocolNames
-protoColours <- c( "black", "red", "green", "blue", "darkgoldenrod") ## overwritten if param passed
+protoColours <- c( "blue", "green", "red", "black", "maroon1") ## overwritten if param passed
 dataext <- ".data" ## overwritten if param passed
 indir <- "." ## overwritten if param passed
 outdir <- "." ## overwritten if param passed

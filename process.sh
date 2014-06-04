@@ -58,17 +58,17 @@ for D in $URLDATA; do
 
     if [ "$NETPERF" == "YES" ]; then
 	../../../../netperf.sh > netperf.data
-	../../../../plotData.R  --vanilla --args --tests="netperf"
+	../../../../plotData.R  --vanilla --args --tests="netperf" --protos="olsr1 bmx batadv olsr2"
     fi
 
     if [ "$TOP" == "YES" ]; then
 	../../../../top.sh > top.data
-	../../../../plotData.R  --vanilla --args --tests="top"
+	../../../../plotData.R  --vanilla --args --tests="top" --protos="olsr1 bmx batadv olsr2"
     fi
 
     if [ "$TCPDUMP" == "YES" ]; then
 	../../../../tcpdump.sh > tcpdump.data
-	../../../../plotData.R  --vanilla --args --tests="tcpdump"
+	../../../../plotData.R  --vanilla --args --tests="tcpdump" --protos="olsr1 bmx batadv olsr2"
     fi
 
 

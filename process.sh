@@ -41,38 +41,43 @@ for D in $URLDATA; do
     EXPDIR="$( echo $D | awk -F'/' '{print $1}' )"
     NODETGZ="$( echo $D | awk -F'/' '{print $2}' )"
     NODEDIR="$( echo $NODETGZ | awk -F '.tar.gz' '{print $1}' )"
-    mkdir -p test_data/$EXPDIR/$NODEDIR && \
+    if \
+	mkdir -p test_data/$EXPDIR/$NODEDIR && \
 	cd       test_data/$EXPDIR/$NODEDIR && \
-	wget -c $URLBASE/$D && \
+	( [ -f $NODETGZ ] || wget -c $URLBASE/$D ) && \
 	( [ -d ./$SAVEDIR ] || tar -xzvf $NODETGZ ) && \
-	cd ./$SAVEDIR && \
-## I don't understand the previous &&
+	cd ./$SAVEDIR \
+	; then
 
-    if [ "$PING" == "YES" ]; then
-	../../../../ping.lua  && \
-	    ../../../../ping.R --data=./ping.data --stat=./ping.stat --imgdir=./ \
-	    --name=s1rtt --type=ecdfVsRtt  --groups=1 \
-	    --name=s1rvh --type=rttVsHops  --groups=1 \
-	    --name=s1tim --type=dataVsTime --groups=1
+
+	if [ "$PING" == "YES" ]; then
+	    ../../../../ping.lua  && \
+		../../../../ping.R --data=./ping.data --stat=./ping.stat --imgdir=./ \
+		--name=s1rtt --type=ecdfVsRtt  --groups=1 \
+		--name=s1rvh --type=rttVsHops  --groups=1 \
+		--name=s1tim --type=dataVsTime --groups=1
+	fi
+
+	if [ "$NETPERF" == "YES" ]; then
+	    ../../../../netperf.sh > netperf.data
+	    ../../../../plotData.R  --vanilla --args --tests="netperf" --protos="olsr1 bmx batadv olsr2"
+	fi
+
+	if [ "$TOP" == "YES" ]; then
+	    ../../../../top.sh > top.data
+	    ../../../../plotData.R  --vanilla --args --tests="top" --protos="olsr1 bmx batadv olsr2"
+	fi
+
+	if [ "$TCPDUMP" == "YES" ]; then
+	    ../../../../tcpdump.sh > tcpdump.data
+	    ../../../../plotData.R  --vanilla --args --tests="tcpdump" --protos="olsr1 bmx batadv olsr2"
+	fi
+
+
+	cd $HOMEDIR
+    else
+	echo "Failed extracting $NODETGZ"
     fi
-
-    if [ "$NETPERF" == "YES" ]; then
-	../../../../netperf.sh > netperf.data
-	../../../../plotData.R  --vanilla --args --tests="netperf" --protos="olsr1 bmx batadv olsr2"
-    fi
-
-    if [ "$TOP" == "YES" ]; then
-	../../../../top.sh > top.data
-	../../../../plotData.R  --vanilla --args --tests="top" --protos="olsr1 bmx batadv olsr2"
-    fi
-
-    if [ "$TCPDUMP" == "YES" ]; then
-	../../../../tcpdump.sh > tcpdump.data
-	../../../../plotData.R  --vanilla --args --tests="tcpdump" --protos="olsr1 bmx batadv olsr2"
-    fi
-
-
-    cd $HOMEDIR
 done
 
 

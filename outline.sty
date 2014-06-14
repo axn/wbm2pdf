@@ -76,6 +76,18 @@
  \includegraphics[width=0.35\textwidth]{#1/s1tim.pdf} \\
 }
 
+\newcommand{\makeCCCPerfGraphic}[1]{
+ \includegraphics[width=0.35\textwidth]{#1/netperf_T.pdf} &
+ \includegraphics[width=0.35\textwidth]{#1/netperf_TP.pdf} &
+ \includegraphics[width=0.35\textwidth]{#1/top_VSZ.pdf} \\
+}
+
+\newcommand{\makeCCCOvhdGraphic}[1]{
+ \includegraphics[width=0.35\textwidth]{#1/top_100CPU.pdf} &
+ \includegraphics[width=0.35\textwidth]{#1/tcpdump_B.pdf} &
+ \includegraphics[width=0.35\textwidth]{#1/tcpdump_P.pdf} \\
+}
+
 
 \newcommand{\makeTCCGraphic}[1]{
       \makeGraphic{#1rtt} & \makeGraphic{#1tim} \\

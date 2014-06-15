@@ -205,23 +205,23 @@ The experiment presented in this work was lead by one of these groups
 and used the following 16 nodes:
 
 \begin{rawtext}[caption={Node locations and experiment usage}, label=locations]
-NodeID  Location               exp:axn-16   exp:axn-17  exp:axn-19
-                               (stationary) (broken)    (mobile)
+NodeID  Location               exp:axn-16   exp:axn-19
+                               (stationary) (mobile)
 164a7a  deathroom
 3b3a90  workshopRoom
 3b3d70  ????
-3e9db0  deathroom??            9db0->1ab0               9db0->4174
-51aac8  halleAnfang                                     aac8->4174
-8a417e  deathroom              417e->4174  417e->1ab0 
-c24174  HalleEnde (mobile)                 4174->1936 
-c2427a  deathroom??                                     427a->4174
+3e9db0  deathroom??            9db0->1ab0  9db0->4174
+51aac8  halleAnfang                        aac8->4174
+8a417e  deathroom              417e->4174   
+c24174  HalleEnde (mobile)                  
+c2427a  deathroom??                        427a->4174
 ce3360  EloiTable
 e4b63a  mustiTable
 e60a62  halleMitte
 e60aac  deathroom
 e60ad6  deathroom
-e61936  axelsTable             1936->4174  1936->4174   1936->4174
-f41ab0  kloschi (building B)   1ab0->4174  1ab0->417e   1ab0->4174
+e61936  axelsTable             1936->4174  1936->4174
+f41ab0  kloschi (building B)   1ab0->4174  1ab0->4174
 \end{rawtext}
 
 
@@ -307,8 +307,17 @@ scenarios. The five tested protocols were batman-advanced (batadv),
 bmx6, olsr, olsr2, and babel. Unfortunately, we just discovered after
 the measurements that the babel protocol daemon was not configured
 correctly, leading to broken routing decisions for multi-hop
-path. Therefore all babel-protocol related measurements are discareded
+path. Therefore all babel-protocol related measurements were discareded
 in the following discussion.
+
+Experiments are grouped in two different scenarios (wibed
+experiments with results accessible via corresponding wibed-data
+repositories as given in Table\ref{resources} ), each scenario
+consisted of about 4 measurement executions by using different
+source-destination combinatinos (measurement results were stored on
+the source-node of the measurement as given by Table\ref{locations}).
+
+
 
 
 

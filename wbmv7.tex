@@ -176,7 +176,7 @@ http://wibed.confine-project.eu/resultsdir/wbmv7-axn-19_2014-05-16_21-35-33 (mob
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Testbed ad Experiment Descripiton}
+\section{Testbed ad Experiment Description}
 
 \subsection{Deployment}
 
@@ -225,7 +225,7 @@ f41ab0  kloschi (building B)   1ab0->4174  1ab0->4174
 \end{rawtext}
 
 
-\subsection{Protocol Configurations and Assumptions}
+\subsection{Protocol configurations and assumptions}
 The highly dynamic and uncontrollable interference in the measurement
 environment made it inpossible to ensure equal conditions for
 sequential experiment executions. Therefore, to ensure equal (fair)
@@ -264,7 +264,7 @@ To avoid protocol-bootstrapping effects (eg unfinished neighbor-,
 path- or topology-discovery), all routing protocol deamons were
 started at least 200 seconds before any measurement.
 
-\subsection{Measurement Configuration and Assumptions}
+\subsection{Measurement configuration and assumptions}
 \label{measurement-config}
 
 Followup measurements were executed from a singe selected node
@@ -319,8 +319,7 @@ source-destination combinatinos (measurement results were stored on
 the source-node of the measurement as given by Note \ref{locations}).
 In the following the two scenarios and selected measrurement results
 are discussed.  The complete set of obtained measurement results and
-resulting graphs are given graph tables \ref{tbl:s-pings} to
-\ref{tbl:m:4}.
+graphs are in Tables \ref{tbl:s-pings} to \ref{tbl:m4}.
 
 \subsubsection{Stationary scenario}
 
@@ -350,7 +349,8 @@ mobile-node carrying walker returned to its original position few
 seconds before the end of each 200seconds lasting measurement.
 
 
-\subsection{Discussion of Measurement Results}
+
+\section{Discussion of measurement results}
 
 \newcommand{\selection}{test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-f41ab0/wbm-axn} 
 
@@ -364,6 +364,8 @@ general ranking of protocols can only be done regarding a very few
 particular characteristics while for other, given the few number of
 measurements and the high amount of randomness involved, at most some
 vague tendencies may be guessed.
+
+\subsection{Protocol-traffic overhead}
 
 The protocol-traffic overhead in terms of bytes per second is given in
 Figure \ref{fig:traffic-ovhd-bytes}.  The continuous lines are
@@ -412,6 +414,7 @@ all other measurements.
 \end{figure}
 
 
+\subsection{Memory and CPU consumption}
 
 Memory and CPU consumption over time are given in Figure \ref{fig:mem}
 and \ref{fig:cpu} respectively. Both characteristics are not captured
@@ -448,6 +451,9 @@ usage.
 \caption{Protocol CPU consumption (relative to total system CPU) over time}
 \label{fig:cpu}
 \end{figure}
+
+
+\subsection{Ping6 tests: path RTT, hops, delivery rate}
 
 
 The analysis of established path characteristics as probed using the
@@ -500,7 +506,8 @@ Figure \ref{fig:prvh} shows the distribution of observed path hops.
 \end{figure}
 
 Figure \ref{fig:prtt} shows the ECDF of the observed RTTs during the
-whole 200 seconds measurement. 
+whole 200 seconds measurement... 
+
 
 \begin{figure}[!ht]
 \centering
@@ -510,11 +517,16 @@ whole 200 seconds measurement.
 \end{figure}
 
 
+\subsection{TCP throughput}
+
+Figure \ref{fig:netperf} shows the TCP troughput, measured successively
+for each protocol and round...
+
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.7\textwidth]{\selection/netperf_TP.pdf}
 \caption{TCP troughput, measured successively for each protocol and round}
-\label{fig:prtt}
+\label{fig:netperf}
 \end{figure}
 
 
@@ -552,98 +564,43 @@ whole 200 seconds measurement.
 %\immediate\write18{ ../eval.R --data=../tmp.data --stat=../tmp.stat --imgdir=../img --texdir=inputs/ }
 
 
-\subsection{Stationary Nodes Measurements}
 
-\makeCCCTabl{tbl:s-pings}{End-to-end ping6 performance between two stationary nodes: 9db0-1ab0, 417e-4174, 1936-4174, 1ab0-4174} {%
-%  \makeCCCPingGraphic{}
-  \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-3e9db0/wbm-axn}
-  \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-8a417e/wbm-axn}
-  \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-e61936/wbm-axn}
-  \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-f41ab0/wbm-axn}
-}
+\subsection{Summary}
+Given the few number of measurements and the high amount of randomness
+involved, the results gathered during this measurement campaign are by
+no means representive. Looking at all perfromed measurements, as given
+in Tables \ref{tbl:s-pings} to \ref{tbl:m4}, a general ranking of
+protocols can only be done regarding some few and particular
+characteristics. For other, if at all, at most some vague tendencies
+may be guessed. Main conclusion here is that much more measurements
+would be needed for concluding representative results.  Thus,
+observations summarized in the following MUST be taken carefully.
 
+OLSR showed varying and in average medium results for measured path
+throughput, RTT, and total packet loss (the four performed throughput
+measurements showed it in all positions, from best- to least-well
+performing protocol). Its observed CPU and memory consumption was
+always notable low.  Regarding protcol-traffic overhead, it typically
+ranged within the most expensive (bandwidth consuming) protocls.
 
+OLSR2 also showed varying and in average medium results for measured
+path throughput, RTT, and total packet loss (OLSR2 driven path
+throughput was typically lowest but once notable high). Its observed
+CPU and memory consumption was always notably higher than any other
+protocol.  Regarding protcol-traffic overhead, it showed average cost
+(bandwidth consuming more than bmx6 but less than olsr and batman advanced).
 
-\makeCCCTabl{tbl:s1}{Overhead and end-to-end performance between two stationary nodes: 3e9db0 and 1ab0} {%
-  \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-3e9db0/wbm-axn}
-  \makeCCCPerfGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-3e9db0/wbm-axn}
-  \makeCCCOvhdGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-3e9db0/wbm-axn}
-}
+BMX6 showed rather good results for measured path throughput, RTT, and
+total packet loss (all four throughput measurements resulted in first
+or second position). Its observed CPU and memory consumption showed
+average cost.  Regarding protcol-traffic overhead, it always showed
+least cost.
 
-\makeCCCTabl{tbl:s2}{Overhead and end-to-end performance between two stationary nodes: 8e417e and c24174} {%
-  \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-8a417e/wbm-axn}
-  \makeCCCPerfGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-8a417e/wbm-axn}
-  \makeCCCOvhdGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-8a417e/wbm-axn}
-}
-
-\makeCCCTabl{tbl:s3}{Overhead and end-to-end performance between two stationary nodes: e61936 and c24174} {%
-  \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-e61936/wbm-axn}
-  \makeCCCPerfGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-e61936/wbm-axn}
-  \makeCCCOvhdGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-e61936/wbm-axn}
-}
-
-\makeCCCTabl{tbl:s4}{Overhead and end-to-end performance between two stationary nodes: f41ab0 and c24174} {%
-  \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-f41ab0/wbm-axn}
-  \makeCCCPerfGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-f41ab0/wbm-axn}
-  \makeCCCOvhdGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-f41ab0/wbm-axn}
-}
-
-
-%\makeCCCTabl{tbl:p2}{concurrent End-to-end ping6 performance between four stationary nodes 1936-4174 and 1ab0-417e} {%
-%  \makeCCCPingGraphic{./test_data/wbmv7-axn-17_2014-05-16_20-13-20/wbmv7-axn-17_2014-05-16_20-13-20_wibed-e61936/wbm-axn}
-%  \makeCCCPingGraphic{./test_data/wbmv7-axn-17_2014-05-16_20-13-20/wbmv7-axn-17_2014-05-16_20-13-20_wibed-f41ab0/wbm-axn}
-%}
-
-%\makeCCCTabl{tbl:p3}{concurrent End-to-end ping6 performance between four stationary nodes 417e-1ab0 and 4174-1926} {%
-%  \makeCCCPingGraphic{./test_data/wbmv7-axn-17_2014-05-16_20-13-20/wbmv7-axn-17_2014-05-16_20-13-20_wibed-8a417e/wbm-axn} %broken daemons
-%  \makeCCCPingGraphic{./test_data/wbmv7-axn-17_2014-05-16_20-13-20/wbmv7-axn-17_2014-05-16_20-13-20_wibed-c24174/wbm-axn} %broken daemons
-%}
-
-\subsection{Mobile Node Measurements}
-
-\makeCCCTabl{tbl:m-pings}{End-to-end ping6 performance to mobile node 4174 from aac8, 1936, 1ab0} {%
-  \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-51aac8/wbm-axn}
-  \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-e61936/wbm-axn}
-  \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-f41ab0/wbm-axn}
-  \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-c2427a/wbm-axn}
-}
-
-
-\makeCCCTabl{tbl:m1}{Overhead and end-to-end performance to mobile node c24174 from stationary node 51aac8} {%
-  \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-51aac8/wbm-axn}
-  \makeCCCOvhdGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-51aac8/wbm-axn}
-}
-
-\makeCCCTabl{tbl:m2}{Overhead and end-to-end performance to mobile node c24174 from stationary node e61936} {%
-  \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-e61936/wbm-axn}
-  \makeCCCOvhdGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-e61936/wbm-axn}
-}
-
-\makeCCCTabl{tbl:m3}{Overhead and end-to-end performance to mobile node c24174 from stationary node f41ab0} {%
-  \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-f41ab0/wbm-axn}
-  \makeCCCOvhdGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-f41ab0/wbm-axn}
-}
-
-\makeCCCTabl{tbl:m4}{Overhead and end-to-end performance to mobile node c24174 from stationary node c2427a} {%
-  \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-c2427a/wbm-axn}
-  \makeCCCOvhdGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-c2427a/wbm-axn}
-}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Mobile Scenarios}
-
-
-
-%\makeCCTabl{tbl:m0}{Mobile test 0 (group 1)} {%
-%      \makeTCCGraphic{m0}
-%}
-
-%\makeCCTabl{tbl:m1}{Mobile node test 1 (group 2)} {%
-%      \makeTCCGraphic{m1}
-%}
-
-%\makeCCTabl{tbl:m0-m2}{Running node test 2 (group 3)} {%
-%      \makeTCCGraphic{m2}
-%}
+Batman advance also showed varying and in average medium results for
+measured path throughput, RTT, and total packet loss. Memory and CPU
+usage could not be measured. Regarding protcol-traffic overhead, it
+typically ranged within the most expensive (bandwidth consuming)
+protocls.
 
 
 
@@ -651,17 +608,24 @@ whole 200 seconds measurement.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{TCP Throughput Measurements}
-\label{sec:tp-measurements}
-
-
 
 
 \section{Recommendations for next battlemesh}
 
 \begin{itemize}
 
-\item Traceroute and mrt often show  high packet for intermediate nodes. This is due to a kind of denial-of-service mechanism enabled by default in Linux kernel. WIth this mechanism the kernel simply discards frequent icmp responses (eg due to exceeded TTL values). This behavior can be disabled by lowering the default net.ipv6.icmp.ratelimit=1000 setting, eg via: sysctl -w net.ipv6.icmp.ratelimit=10
+\item Traceroute and mrt often show high packet for intermediate
+  nodes. This is due to a kind of denial-of-service mechanism enabled
+  by default in Linux kernel. WIth this mechanism the kernel simply
+  discards frequent icmp responses (eg due to exceeded TTL
+  values). This behavior can be disabled by lowering the default
+  net.ipv6.icmp.ratelimit=1000 setting, eg via: sysctl -w
+  net.ipv6.icmp.ratelimit=10
+
+\item Use batctl for batman-advanced and ping related measurement foo.
+
+\item Do also protocol execution sequentially, so that protocol
+  overheads do not affect other protocols path performance.
 
 \end{itemize}
 
@@ -671,6 +635,82 @@ whole 200 seconds measurement.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Appendix}
 
+
+\subsection{All stationary-scenario measurement graphs}
+
+\makeCCCTabl{tbl:s-pings}{End-to-end ping6 performance between two stationary nodes: 9db0-1ab0, 417e-4174, 1936-4174, 1ab0-4174}{%
+  \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-3e9db0/wbm-axn}
+  \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-8a417e/wbm-axn}
+  \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-e61936/wbm-axn}
+  \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-f41ab0/wbm-axn}
+}
+
+
+
+\makeCCCTabl{tbl:s1}{Overhead and end-to-end performance between two stationary nodes: 3e9db0 and 1ab0}{%
+  \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-3e9db0/wbm-axn}
+  \makeCCCPerfGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-3e9db0/wbm-axn}
+  \makeCCCOvhdGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-3e9db0/wbm-axn}
+}
+
+\makeCCCTabl{tbl:s2}{Overhead and end-to-end performance between two stationary nodes: 8e417e and c24174}{%
+  \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-8a417e/wbm-axn}
+  \makeCCCPerfGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-8a417e/wbm-axn}
+  \makeCCCOvhdGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-8a417e/wbm-axn}
+}
+
+\makeCCCTabl{tbl:s3}{Overhead and end-to-end performance between two stationary nodes: e61936 and c24174}{%
+  \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-e61936/wbm-axn}
+  \makeCCCPerfGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-e61936/wbm-axn}
+  \makeCCCOvhdGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-e61936/wbm-axn}
+}
+
+\makeCCCTabl{tbl:s4}{Overhead and end-to-end performance between two stationary nodes: f41ab0 and c24174}{%
+  \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-f41ab0/wbm-axn}
+  \makeCCCPerfGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-f41ab0/wbm-axn}
+  \makeCCCOvhdGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-f41ab0/wbm-axn}
+}
+
+
+%\makeCCCTabl{tbl:p2}{concurrent End-to-end ping6 performance between four stationary nodes 1936-4174 and 1ab0-417e}{%
+%  \makeCCCPingGraphic{./test_data/wbmv7-axn-17_2014-05-16_20-13-20/wbmv7-axn-17_2014-05-16_20-13-20_wibed-e61936/wbm-axn}
+%  \makeCCCPingGraphic{./test_data/wbmv7-axn-17_2014-05-16_20-13-20/wbmv7-axn-17_2014-05-16_20-13-20_wibed-f41ab0/wbm-axn}
+%}
+
+%\makeCCCTabl{tbl:p3}{concurrent End-to-end ping6 performance between four stationary nodes 417e-1ab0 and 4174-1926}{%
+%  \makeCCCPingGraphic{./test_data/wbmv7-axn-17_2014-05-16_20-13-20/wbmv7-axn-17_2014-05-16_20-13-20_wibed-8a417e/wbm-axn} %broken daemons
+%  \makeCCCPingGraphic{./test_data/wbmv7-axn-17_2014-05-16_20-13-20/wbmv7-axn-17_2014-05-16_20-13-20_wibed-c24174/wbm-axn} %broken daemons
+%}
+
+\subsection{All mobile-scenario measurement graphs}
+
+\makeCCCTabl{tbl:m-pings}{End-to-end ping6 performance to mobile node 4174 from aac8, 1936, 1ab0}{%
+  \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-51aac8/wbm-axn}
+  \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-e61936/wbm-axn}
+  \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-f41ab0/wbm-axn}
+  \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-c2427a/wbm-axn}
+}
+
+
+\makeCCCTabl{tbl:m1}{Overhead and end-to-end performance to mobile node c24174 from stationary node 51aac8}{%
+  \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-51aac8/wbm-axn}
+  \makeCCCOvhdGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-51aac8/wbm-axn}
+}
+
+\makeCCCTabl{tbl:m2}{Overhead and end-to-end performance to mobile node c24174 from stationary node e61936}{%
+  \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-e61936/wbm-axn}
+  \makeCCCOvhdGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-e61936/wbm-axn}
+}
+
+\makeCCCTabl{tbl:m3}{Overhead and end-to-end performance to mobile node c24174 from stationary node f41ab0}{%
+  \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-f41ab0/wbm-axn}
+  \makeCCCOvhdGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-f41ab0/wbm-axn}
+}
+
+\makeCCCTabl{tbl:m4}{Overhead and end-to-end performance to mobile node c24174 from stationary node c2427a}{%
+  \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-c2427a/wbm-axn}
+  \makeCCCOvhdGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-c2427a/wbm-axn}
+}
 
 
 

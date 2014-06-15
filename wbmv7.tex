@@ -185,7 +185,7 @@ deployed. 16 wibed-nodes have beend spread over 3 different floors in
 the main event building. About 10 of these 16 nodes were located in
 the main event hall (approximately 300 sqare-meters workshop room)
 with highest node density in a particular corner of this room
-(deathroom in Table \ref{locations}) and the 6 in the below and above floor of the event
+(deathroom in Note \ref{locations}) and the 6 in the below and above floor of the event
 hall. Three more nodes have been placed in a neighboring building with
 wireless connectivity.  One node was battery powerded for allowing
 mobile-node scenarios.  In fact not all node positions were always
@@ -270,7 +270,7 @@ Followup measurements were executed from a singe selected node
 (src-node) by launching a pre-deployed test script \cite{wbm-test} and
 given the id of a single other node (dst-node) for probing end-to-end
 path characteristics. Src-node and dst-node IDs for each measurement
-are given in Table \ref{locations}.
+are given in Note \ref{locations}.
 
 Each followup measurement last 200 seconds during which the following
 additional tools were used to observe protocol performance and
@@ -310,17 +310,24 @@ correctly, leading to broken routing decisions for multi-hop
 path. Therefore all babel-protocol related measurements were discareded
 in the following discussion.
 
-Experiments are grouped in two different scenarios (wibed
-experiments with results accessible via corresponding wibed-data
-repositories as given in Table\ref{resources} ), each scenario
+Experiments are grouped in two different scenarios (wibed experiments
+with results accessible via corresponding wibed-data repositories as
+given in Note \ref{resources} for exp-16 and exp-19 ), each scenario
 consisted of about 4 measurement executions by using different
 source-destination combinatinos (measurement results were stored on
-the source-node of the measurement as given by Table\ref{locations}).
+the source-node of the measurement as given by Note \ref{locations}).
+In the following the two scenarios and selected measrurement results
+are discussed.  The complete set of obtained measurement results and
+resulting graphs are given graph tables \ref{tbl:s-pings} to
+\ref{tbl:m:4}.
 
+\subsubsection{Stationary scenario}
 
-
-
-
+During the stationary scenario the involved wibed nodes were not
+moved, however still affected by uncontrollable interference
+conditions from the environment itself, other parallel experiments
+executed on other wibed nodes and the traffic created by the
+experiments itself. For each measurement a couple of source 
 
 
 % wget http://downloads.battlemesh.org/WBMv6/geographical_map1.png
@@ -357,7 +364,7 @@ the source-node of the measurement as given by Table\ref{locations}).
 
 \subsection{Stationary Nodes Measurements}
 
-\makeCCCTabl{tbl:p1}{End-to-end ping6 performance between two stationary nodes: 9db0-1ab0, 417e-4174, 1936-4174, 1ab0-4174} {%
+\makeCCCTabl{tbl:s-pings}{End-to-end ping6 performance between two stationary nodes: 9db0-1ab0, 417e-4174, 1936-4174, 1ab0-4174} {%
 %  \makeCCCPingGraphic{}
   \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-3e9db0/wbm-axn}
   \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-8a417e/wbm-axn}
@@ -367,25 +374,25 @@ the source-node of the measurement as given by Table\ref{locations}).
 
 
 
-\makeCCCTabl{tbl:p1}{Overhead and end-to-end performance between two stationary nodes: 3e9db0 and 1ab0} {%
+\makeCCCTabl{tbl:s1}{Overhead and end-to-end performance between two stationary nodes: 3e9db0 and 1ab0} {%
   \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-3e9db0/wbm-axn}
   \makeCCCPerfGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-3e9db0/wbm-axn}
   \makeCCCOvhdGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-3e9db0/wbm-axn}
 }
 
-\makeCCCTabl{tbl:p1}{Overhead and end-to-end performance between two stationary nodes: 8e417e and c24174} {%
+\makeCCCTabl{tbl:s2}{Overhead and end-to-end performance between two stationary nodes: 8e417e and c24174} {%
   \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-8a417e/wbm-axn}
   \makeCCCPerfGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-8a417e/wbm-axn}
   \makeCCCOvhdGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-8a417e/wbm-axn}
 }
 
-\makeCCCTabl{tbl:p1}{Overhead and end-to-end performance between two stationary nodes: e61936 and c24174} {%
+\makeCCCTabl{tbl:s3}{Overhead and end-to-end performance between two stationary nodes: e61936 and c24174} {%
   \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-e61936/wbm-axn}
   \makeCCCPerfGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-e61936/wbm-axn}
   \makeCCCOvhdGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-e61936/wbm-axn}
 }
 
-\makeCCCTabl{tbl:p1}{Overhead and end-to-end performance between two stationary nodes: f41ab0 and c24174} {%
+\makeCCCTabl{tbl:s4}{Overhead and end-to-end performance between two stationary nodes: f41ab0 and c24174} {%
   \makeCCCPingGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-f41ab0/wbm-axn}
   \makeCCCPerfGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-f41ab0/wbm-axn}
   \makeCCCOvhdGraphic{./test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-f41ab0/wbm-axn}
@@ -404,7 +411,7 @@ the source-node of the measurement as given by Table\ref{locations}).
 
 \subsection{Mobile Node Measurements}
 
-\makeCCCTabl{tbl:p4}{End-to-end ping6 performance to mobile node 4174 from aac8, 1936, 1ab0} {%
+\makeCCCTabl{tbl:m-pings}{End-to-end ping6 performance to mobile node 4174 from aac8, 1936, 1ab0} {%
   \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-51aac8/wbm-axn}
   \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-e61936/wbm-axn}
   \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-f41ab0/wbm-axn}
@@ -412,22 +419,22 @@ the source-node of the measurement as given by Table\ref{locations}).
 }
 
 
-\makeCCCTabl{tbl:p1}{Overhead and end-to-end performance to mobile node c24174 from stationary node 51aac8} {%
+\makeCCCTabl{tbl:m1}{Overhead and end-to-end performance to mobile node c24174 from stationary node 51aac8} {%
   \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-51aac8/wbm-axn}
   \makeCCCOvhdGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-51aac8/wbm-axn}
 }
 
-\makeCCCTabl{tbl:p1}{Overhead and end-to-end performance to mobile node c24174 from stationary node e61936} {%
+\makeCCCTabl{tbl:m2}{Overhead and end-to-end performance to mobile node c24174 from stationary node e61936} {%
   \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-e61936/wbm-axn}
   \makeCCCOvhdGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-e61936/wbm-axn}
 }
 
-\makeCCCTabl{tbl:p1}{Overhead and end-to-end performance to mobile node c24174 from stationary node f41ab0} {%
+\makeCCCTabl{tbl:m3}{Overhead and end-to-end performance to mobile node c24174 from stationary node f41ab0} {%
   \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-f41ab0/wbm-axn}
   \makeCCCOvhdGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-f41ab0/wbm-axn}
 }
 
-\makeCCCTabl{tbl:p1}{Overhead and end-to-end performance to mobile node c24174 from stationary node c2427a} {%
+\makeCCCTabl{tbl:m4}{Overhead and end-to-end performance to mobile node c24174 from stationary node c2427a} {%
   \makeCCCPingGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-c2427a/wbm-axn}
   \makeCCCOvhdGraphic{./test_data/wbmv7-axn-19_2014-05-16_21-35-33/wbmv7-axn-19_2014-05-16_21-35-33_wibed-c2427a/wbm-axn}
 }

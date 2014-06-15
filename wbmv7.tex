@@ -178,24 +178,30 @@ http://wibed.confine-project.eu/resultsdir/wbmv7-axn-19_2014-05-16_21-35-33 (mob
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Testbed Descripiton}
+\section{Testbed ad Experiment Descripiton}
 
+\subsection{Deployment}
 
 During the first days of the event a total of 20 wibed nodes have been
 deployed. 16 wibed-nodes have beend spread over 3 different floors in
-the main event building. However, about 10 of these 16 nodes were
-located in the main event hall (workshop room) with highest node
-density in a particular corner of this room (deathroom) and the 6 in
-the below and above floor of the event hall. Three more nodes have
-been placed in a neighboring building with wireless connectivity.  One
-node was battery powerded for allowing mobile-node scenarios.  In fact
-not all node positions were always exactly known as nodes were
-sometimes moved to fullfill specific experimentation-scenario
-requirements.  In each building 1 of the wibed-nodes were configured
-as GW nodes and blocked for experimental usage. The remaining 18 nodes
-were shared between three different experimentation groups for running
-tests and different scenarios (each node was used by at most one
-experimentation group at any time).
+the main event building. About 10 of these 16 nodes were located in
+the main event hall (approximately 300 sqare-meters workshop room)
+with highest node density in a particular corner of this room
+(deathroom) and the 6 in the below and above floor of the event
+hall. Three more nodes have been placed in a neighboring building with
+wireless connectivity.  One node was battery powerded for allowing
+mobile-node scenarios.  In fact not all node positions were always
+exactly known as nodes were sometimes moved to fullfill specific
+experimentation-scenario requirements.  In each building 1 of the
+wibed-nodes were configured as GW nodes and blocked for experimental
+usage. The remaining 18 nodes were shared between three different
+experimentation groups for running tests and different scenarios (each
+node was used by at most one experimentation group at any time).
+
+All experiments were performed in a single 5Ghz channel. However, due
+to the presence of around 50 participans with wireless laptops and
+several other actively used wireless equipment, also the used 5GHz
+channel was likely affected by non-testbed related interference.
 
 The experiment presented in this work was lead by one of these groups
 and used the following 16 nodes:
@@ -222,6 +228,37 @@ f41ab0  kloschi (building B)   1ab0->4174  1ab0->417e   1ab0->4174
 \end{verbatim}
 \normalsize
 
+\subsection{Experiment Configuration}
+The highly dynamic and uncontrollable interference in the measurement
+environment made it inpossible to ensure equal conditions for
+sequential experiment executions. Therefore, to ensure equal (fair)
+environment conditions for all tested protocols, all routing protocols
+were running and observed in parallel on all nodes, thus all being
+always exposed to the exactly same environmental conditions. Only
+netperf-based throughput tests, seeking to measure the achievable
+performance of the end-to-end routing path established by the
+individual protocols, were performed sequentially.
+
+The accepted downside of this approach is of course that protocol
+overhead introduced by one protocol or by protocol-observing tools
+like ping (causing total overhead in the order of few KB/s, as can be
+seen from later measurements) slightly affects the maximum achievable
+end-to-end throughput of other protocols (in the order of seveal
+MB/s).
+
+To avoid protocol-bootstrapping effects (eg unfinished neighbor-,
+path- or topology-discovery), all routing protocol deamons were
+started at least 200 seconds before any measurement.
+
+Followup measurements were executed from a singe selected node by
+launching a pre-deployed test script \cite{wbm-test} which...
+
+Each followup measurement last 200 seconds during which the following
+additional tools were used to observe protocol performance and
+overhead: 
+\begin{itemize}
+\item ping
+\end{itemize}
 
 \subsection{Experiments}
 

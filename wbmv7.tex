@@ -157,10 +157,7 @@ WBM...
 
 \section{Data and System Repositories}
 
-
-
-\scriptsize
-\begin{verbatim}
+\begin{rawtext}[caption={Testbed and experiment related code and data repositories}, label=resources]
 http://wibed.confine-project.eu
 
 https://github.com/battlemesh/wibed (buildroot)
@@ -173,8 +170,9 @@ http://wibed.confine-project.eu/resultsdir/wbmv7-axn-16_2014-05-16_19-28-43 (sta
 http://wibed.confine-project.eu/resultsdir/wbmv7-axn-17_2014-05-16_20-13-20 (broken crossed streams scenario)
 http://wibed.confine-project.eu/resultsdir/wbmv7-axn-19_2014-05-16_21-35-33 (mobile scenarios)
 
-\end{verbatim}
-\normalsize
+\end{rawtext}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -187,7 +185,7 @@ deployed. 16 wibed-nodes have beend spread over 3 different floors in
 the main event building. About 10 of these 16 nodes were located in
 the main event hall (approximately 300 sqare-meters workshop room)
 with highest node density in a particular corner of this room
-(deathroom) and the 6 in the below and above floor of the event
+(deathroom in Table \ref{locations}) and the 6 in the below and above floor of the event
 hall. Three more nodes have been placed in a neighboring building with
 wireless connectivity.  One node was battery powerded for allowing
 mobile-node scenarios.  In fact not all node positions were always
@@ -206,8 +204,7 @@ channel was likely affected by non-testbed related interference.
 The experiment presented in this work was lead by one of these groups
 and used the following 16 nodes:
 
-\scriptsize
-\begin{verbatim}
+\begin{rawtext}[caption={Node locations and experiment usage}, label=locations]
 NodeID  Location               exp:axn-16   exp:axn-17  exp:axn-19
                                (stationary) (broken)    (mobile)
 164a7a  deathroom
@@ -225,19 +222,16 @@ e60aac  deathroom
 e60ad6  deathroom
 e61936  axelsTable             1936->4174  1936->4174   1936->4174
 f41ab0  kloschi (building B)   1ab0->4174  1ab0->417e   1ab0->4174
-\end{verbatim}
-\normalsize
+\end{rawtext}
 
-\subsection{Experiment Configuration}
+
+\subsection{Protocol Configurations and Assumptions}
 The highly dynamic and uncontrollable interference in the measurement
 environment made it inpossible to ensure equal conditions for
 sequential experiment executions. Therefore, to ensure equal (fair)
 environment conditions for all tested protocols, all routing protocols
 were running and observed in parallel on all nodes, thus all being
-always exposed to the exactly same environmental conditions. Only
-netperf-based throughput tests, seeking to measure the achievable
-performance of the end-to-end routing path established by the
-individual protocols, were performed sequentially.
+always exposed to the exactly same environmental conditions. 
 
 The accepted downside of this approach is of course that protocol
 overhead introduced by one protocol or by protocol-observing tools
@@ -246,18 +240,63 @@ seen from later measurements) slightly affects the maximum achievable
 end-to-end throughput of other protocols (in the order of seveal
 MB/s).
 
+Only netperf-tcp-based throughput probes, seeking to measure the
+achievable tcp performance of the end-to-end routing paths established
+by the individual protocols, were performed sequentially. This
+decision has been made because each netperf test trys to load the
+capacity of a given end-to-end path with a maximum of traffic, thus
+introducing maximum probing-traffic overhead and interference while on
+the other hand (given the tcp-inherent exponential backoff approach)
+drastically lowering the currently offered load in the presence of
+packet loss, leading to highly randomized results when running in
+parallel and making the comparatin of parallel executions difficult.
+
+
+All protocols were configured for routing IPv6 traffic using an
+individual ULA address prefix per protocol. 
+
+All protocols were configured with default parametrizations, thus no
+environment specific customizations have been made apart from ensuring
+the routing of the given IPv6 address range. The exact configuration
+can be accessed via \cite{wbm-config}.
+
 To avoid protocol-bootstrapping effects (eg unfinished neighbor-,
 path- or topology-discovery), all routing protocol deamons were
 started at least 200 seconds before any measurement.
 
-Followup measurements were executed from a singe selected node by
-launching a pre-deployed test script \cite{wbm-test} which...
+\subsection{Measurement Configuration and Assumptions}
+
+Followup measurements were executed from a singe selected node
+(src-node) by launching a pre-deployed test script \cite{wbm-test} and
+given the id of a single other node (dst-node) for probing end-to-end
+path characteristics. Src-node and dst-node IDs for each measurement
+are given in Table \ref{locations}.
 
 Each followup measurement last 200 seconds during which the following
 additional tools were used to observe protocol performance and
 overhead: 
 \begin{itemize}
-\item ping
+\item ping6 (unix) command to dst-node ipv6 address with one-second interval
+  and 1000 bytes icmp user data. The output of the ping6 command got
+  logged for later end-to-end packet loss, hop-count, and round-trip
+  time (RTT) over time analysis.
+
+\item top (unix) command for logging protocol-specific CPU and memory
+  consumption at 1 second intervals.
+
+\item mtr (my trace route, unix) command at 1 second interval for
+  tracing full src-to-dst protocol-established path information. Due
+  to the difficulty to correlate or graphically represent these traces,
+  the obtained log files were not processed further.
+
+\item netperf, executed in repeating rounds (4 rounds), each probing
+  sequentially the maximum achievable end-to-end throughput to always
+  the same destination node for 10 seconds via each routing protocol.
+  
+\item tcpdump, passively capturing the present routing-protocol
+  overhead of each protocol as reveived on the wireless channel by the
+  src node.
+
 \end{itemize}
 
 \subsection{Experiments}

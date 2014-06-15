@@ -40,9 +40,26 @@
 % \usepackage[left=4cm,top=3.5cm,right=4cm,bottom=3.5cm,includeheadfoot]{geometry}
 \usepackage[plainpages=false]{hyperref}
 
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%% Special packages and commands
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{caption}
+\usepackage{float}
+\usepackage{listings}
+
+\lstnewenvironment{rawtext}[1][]{
+  \noindent
+  \minipage{\linewidth}
+  \renewcommand*{\lstlistingname}{Table}
+  \lstset{basicstyle=\footnotesize\ttfamily\bfseries,lineskip={-4pt},columns=fullflexible,keepspaces=true,captionpos=b,xleftmargin=2em,#1}}
+{\endminipage}
+
+
 \newcommand{\executeiffilenewer}[3]{%
 \ifnum\pdfstrcmp{\pdffilemoddate{#1}}%
 {\pdffilemoddate{#2}}>0%
@@ -64,6 +81,8 @@
  \label{#1}
 \end{figure}
 }
+
+
 
 \newcommand{\makeGraphic}[1]{
  \includegraphics[width=0.5\textwidth]{../img/#1.pdf}

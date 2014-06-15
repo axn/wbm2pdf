@@ -265,6 +265,7 @@ path- or topology-discovery), all routing protocol deamons were
 started at least 200 seconds before any measurement.
 
 \subsection{Measurement Configuration and Assumptions}
+\label{measurement-config}
 
 Followup measurements were executed from a singe selected node
 (src-node) by launching a pre-deployed test script \cite{wbm-test} and
@@ -326,8 +327,45 @@ resulting graphs are given graph tables \ref{tbl:s-pings} to
 During the stationary scenario the involved wibed nodes were not
 moved, however still affected by uncontrollable interference
 conditions from the environment itself, other parallel experiments
-executed on other wibed nodes and the traffic created by the
-experiments itself. For each measurement a couple of source 
+executed on other wibed nodes, and the traffic created by the
+experiments itself. For each measurement a different couple of
+source-node and destinatino-node was selected intuitively with the
+objective to select, in terms of network-topology, rather distant
+(so non-neighboring) nodes.
+
+Each selected node couple was tested successively (with several
+hundreds seconds between each measurement) over 200 seconds using the
+wbm-test script \cite{wbm-test} doing measurements as described in
+Section \ref{measurement-config}.
+
+\subsubsection{Mobile scenario}
+
+Apart from the presence of a single mobile node, always serving as
+destination node, all mobile scenarios were performed in the same way
+as the stationary scenarios. During the mobile scenario the mobile
+node was moved (carried) manually at slow-walking speed (approximately
+1m/second) the about 100 meters back and forth along the main event
+hall, downstairs to the lower floor, and along the lower hall.  The
+mobile-node carrying walker returned to its original position few
+seconds before the end of each 200seconds lasting measurement.
+
+
+\subsection{Discussion of Measurement Results}
+
+In the following the results of only one performed measurement are
+discussed in more detail. Therefore the last measurement, as summarized
+via graphs in Table \ref{tbl:s4}, was selected simply beacause it
+suited best to illustrate a number of expected and unexpected
+phenomenas. The results represented by this selection are by no means
+representive. However, looking at all perfromed measurements, a
+general ranking of protocols can only be done regarding a very few
+particular characteristics while for other, given the few number of
+measurements and the high amount of randomness involved, at most some
+vague tendencies may be guessed.
+
+The protocol traffic overhead in terms of
+
+
 
 
 % wget http://downloads.battlemesh.org/WBMv6/geographical_map1.png

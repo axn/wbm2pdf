@@ -180,8 +180,25 @@ http://wibed.confine-project.eu/resultsdir/wbmv7-axn-19_2014-05-16_21-35-33 (mob
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Testbed Descripiton}
 
-\subsection{Nodes and Locations}
 
+During the first days of the event a total of 20 wibed nodes have been
+deployed. 16 wibed-nodes have beend spread over 3 different floors in
+the main event building. However, about 10 of these 16 nodes were
+located in the main event hall (workshop room) with highest node
+density in a particular corner of this room (deathroom) and the 6 in
+the below and above floor of the event hall. Three more nodes have
+been placed in a neighboring building with wireless connectivity.  One
+node was battery powerded for allowing mobile-node scenarios.  In fact
+not all node positions were always exactly known as nodes were
+sometimes moved to fullfill specific experimentation-scenario
+requirements.  In each building 1 of the wibed-nodes were configured
+as GW nodes and blocked for experimental usage. The remaining 18 nodes
+were shared between three different experimentation groups for running
+tests and different scenarios (each node was used by at most one
+experimentation group at any time).
+
+The experiment presented in this work was lead by one of these groups
+and used the following 16 nodes:
 
 \scriptsize
 \begin{verbatim}
@@ -201,12 +218,25 @@ e60a62  halleMitte
 e60aac  deathroom
 e60ad6  deathroom
 e61936  axelsTable             1936->4174  1936->4174   1936->4174
-f41ab0  kloschiOffice??        1ab0->4174  1ab0->417e   1ab0->4174
+f41ab0  kloschi (building B)   1ab0->4174  1ab0->417e   1ab0->4174
 \end{verbatim}
 \normalsize
 
 
-\subsection{Topology}
+\subsection{Experiments}
+
+The experiment focused on measuring the overhead and performance of 5
+different mesh routing protocol implementations in static and mobile
+scenarios. The five tested protocols were batman-advanced (batadv),
+bmx6, olsr, olsr2, and babel. Unfortunately, we just discovered after
+the measurements that the babel protocol daemon was not configured
+correctly, leading to broken routing decisions for multi-hop
+path. Therefore all babel-protocol related measurements are discareded
+in the following discussion.
+
+
+
+
 
 % wget http://downloads.battlemesh.org/WBMv6/geographical_map1.png
 % wget http://downloads.battlemesh.org/WBMv6/geographical_map2.png
@@ -235,41 +265,10 @@ f41ab0  kloschiOffice??        1ab0->4174  1ab0->417e   1ab0->4174
 %\end{figure}
 
 \clearpage
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Ping Measurements (hops, rtt, loss)}
-\label{sec:ping-measurements}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\immediate\write18{ ../eval.R --data=../tmp.data --stat=../tmp.stat --imgdir=../img --texdir=inputs/ }
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Stationary Scenarios}
-
-\clearpage
-%\makeFigure{sArtt}{Random node test 1}{0.69} 
-%\makeFigure{sArvh}{Random node test 1}{0.69}
-
-\clearpage
-
 %\makeFigure{sBrtt}{Random node test 2}{0.69}
 %\makeFigure{sBrvh}{Random node test 2}{0.69}
+%\immediate\write18{ ../eval.R --data=../tmp.data --stat=../tmp.stat --imgdir=../img --texdir=inputs/ }
 
-
-\clearpage
-
-
-\subsection{Ping Results Table}
-
-The folloing verbatim table lists statistics per experiment (EXP) and group (GRP) as calculated by the lua-based
-evaluation script based on the raw ping-measurements data and outputted to the file ping.stat.
-Event based results are given for each received icmp response in ping.data.
-
-
-%\VerbatimInput{../ping.stat}
 
 \subsection{Stationary Nodes Measurements}
 

@@ -181,15 +181,15 @@ http://wibed.confine-project.eu/resultsdir/wbmv7-axn-19_2014-05-16_21-35-33 (mob
 \subsection{Deployment}
 
 During the first days of the event a total of 20 wibed nodes have been
-deployed. 16 wibed-nodes have beend spread over 3 different floors in
+deployed. 16 wibed-nodes have been spread over 3 different floors in
 the main event building. About 10 of these 16 nodes were located in
-the main event hall (approximately 300 sqare-meters workshop room)
+the main event hall (approximately 300 square-meters workshop room)
 with highest node density in a particular corner of this room
 (deathroom in Note \ref{locations}) and the 6 in the below and above floor of the event
 hall. Three more nodes have been placed in a neighboring building with
-wireless connectivity.  One node was battery powerded for allowing
+wireless connectivity.  One node was battery powered for allowing
 mobile-node scenarios.  In fact not all node positions were always
-exactly known as nodes were sometimes moved to fullfill specific
+exactly known as nodes were sometimes moved to fulfill specific
 experimentation-scenario requirements.  In each building 1 of the
 wibed-nodes were configured as GW nodes and blocked for experimental
 usage. The remaining 18 nodes were shared between three different
@@ -197,7 +197,7 @@ experimentation groups for running tests and different scenarios (each
 node was used by at most one experimentation group at any time).
 
 All experiments were performed in a single 5Ghz channel. However, due
-to the presence of around 50 participans with wireless laptops and
+to the presence of around 50 participants with wireless laptops and
 several other actively used wireless equipment, also the used 5GHz
 channel was likely affected by non-testbed related interference.
 
@@ -227,7 +227,7 @@ f41ab0  kloschi (building B)   1ab0->4174  1ab0->4174
 
 \subsection{Protocol configurations and assumptions}
 The highly dynamic and uncontrollable interference in the measurement
-environment made it inpossible to ensure equal conditions for
+environment made it impossible to ensure equal conditions for
 sequential experiment executions. Therefore, to ensure equal (fair)
 environment conditions for all tested protocols, all routing protocols
 were running and observed in parallel on all nodes, thus all being
@@ -237,37 +237,37 @@ The accepted downside of this approach is of course that protocol
 overhead introduced by one protocol or by protocol-observing tools
 like ping (causing total overhead in the order of few KB/s, as can be
 seen from later measurements) slightly affects the maximum achievable
-end-to-end throughput of other protocols (in the order of seveal
+end-to-end throughput of other protocols (in the order of several
 MB/s).
 
 Only netperf-tcp-based throughput probes, seeking to measure the
 achievable tcp performance of the end-to-end routing paths established
 by the individual protocols, were performed sequentially. This
-decision has been made because each netperf test trys to load the
+decision has been made because each netperf test tries to load the
 capacity of a given end-to-end path with a maximum of traffic, thus
 introducing maximum probing-traffic overhead and interference while on
-the other hand (given the tcp-inherent exponential backoff approach)
+the other hand (given the tcp-inherent exponential back-off approach)
 drastically lowering the currently offered load in the presence of
 packet loss, leading to highly randomized results when running in
-parallel and making the comparatin of parallel executions difficult.
+parallel and making the comparison of parallel executions difficult.
 
 
 All protocols were configured for routing IPv6 traffic using an
 individual ULA address prefix per protocol. 
 
-All protocols were configured with default parametrizations, thus no
+All protocols were configured with default parametrization, thus no
 environment specific customizations have been made apart from ensuring
 the routing of the given IPv6 address range. The exact configuration
 can be accessed via \cite{wbm-config}.
 
 To avoid protocol-bootstrapping effects (eg unfinished neighbor-,
-path- or topology-discovery), all routing protocol deamons were
+path- or topology-discovery), all routing protocol daemons were
 started at least 200 seconds before any measurement.
 
 \subsection{Measurement configuration and assumptions}
 \label{measurement-config}
 
-Followup measurements were executed from a singe selected node
+Follow-up measurements were executed from a singe selected node
 (src-node) by launching a pre-deployed test script \cite{wbm-test} and
 given the id of a single other node (dst-node) for probing end-to-end
 path characteristics. Src-node and dst-node IDs for each measurement
@@ -295,7 +295,7 @@ overhead:
   the same destination node for 10 seconds via each routing protocol.
   
 \item tcpdump, passively capturing the present routing-protocol
-  overhead of each protocol as reveived on the wireless channel by the
+  overhead of each protocol as received on the wireless channel by the
   src node.
 
 \end{itemize}
@@ -308,16 +308,16 @@ scenarios. The five tested protocols were batman-advanced (batadv),
 bmx6, olsr, olsr2, and babel. Unfortunately, we just discovered after
 the measurements that the babel protocol daemon was not configured
 correctly, leading to broken routing decisions for multi-hop
-path. Therefore all babel-protocol related measurements were discareded
+path. Therefore all babel-protocol related measurements were discarded
 in the following discussion.
 
 Experiments are grouped in two different scenarios (wibed experiments
 with results accessible via corresponding wibed-data repositories as
 given in Note \ref{resources} for exp-16 and exp-19 ), each scenario
 consisted of about 4 measurement executions by using different
-source-destination combinatinos (measurement results were stored on
+source-destination combination (measurement results were stored on
 the source-node of the measurement as given by Note \ref{locations}).
-In the following the two scenarios and selected measrurement results
+In the following the two scenarios and selected measurement results
 are discussed.  The complete set of obtained measurement results and
 graphs are in Tables \ref{tbl:s-pings} to \ref{tbl:m4}.
 
@@ -328,7 +328,7 @@ moved, however still affected by uncontrollable interference
 conditions from the environment itself, other parallel experiments
 executed on other wibed nodes, and the traffic created by the
 experiments itself. For each measurement a different couple of
-source-node and destinatino-node was selected intuitively with the
+source-node and desalination-node was selected intuitively with the
 objective to select, in terms of network-topology, rather distant
 (so non-neighboring) nodes.
 
@@ -346,7 +346,7 @@ node was moved (carried) manually at slow-walking speed (approximately
 1m/second) the about 100 meters back and forth along the main event
 hall, downstairs to the lower floor, and along the lower hall.  The
 mobile-node carrying walker returned to its original position few
-seconds before the end of each 200seconds lasting measurement.
+seconds before the end of each 200 seconds lasting measurement.
 
 
 
@@ -356,10 +356,10 @@ seconds before the end of each 200seconds lasting measurement.
 
 In the following the results of only one performed measurement are
 discussed in more detail. Therefore the last measurement, as summarized
-via graphs in Table \ref{tbl:s4}, was selected simply beacause it
+via graphs in Table \ref{tbl:s4}, was selected simply because it
 suited best to illustrate a number of expected and unexpected
 phenomenas. The results represented by this selection are by no means
-representive. However, looking at all perfromed measurements, a
+representative. However, looking at all performed measurements, a
 general ranking of protocols can only be done regarding a very few
 particular characteristics while for other, given the few number of
 measurements and the high amount of randomness involved, at most some
@@ -378,7 +378,7 @@ the traffic created by neighboring nodes (being in transmission range
 of the capturing node). Only pure protocol-traffic was considered (not
 user-data related traffic) as created by each protocol to detect and
 establish the routing inside the network. For batman-advanced,
-encapsulating user traffic inside the same ethernat frame type as used
+encapsulating user traffic inside the same ethernet frame type as used
 for protocol traffic, special filtering rules were used for
 differentiation.
 From this measurement it can be seen that highest average overhead was
@@ -422,13 +422,13 @@ for batman advanced, which, running in kernel space, does not allow an
 easy profiling of this data. It can be seen that none of the captured
 protocols changed its memory requirements during this (nor any later)
 measurement. Also, the observed differences seem rather marginal
-(lowest seen for olsr with about 1.15MBytes and highest for olsr2 with
+(lowest seen for olsr with about 1.15 MBytes and highest for olsr2 with
 about 1.7 MBytes) compared to the total available memory of 128 MBytes.
 
-CPU consumtion is given relative to the total available CPU processing
-capabilies (typically characterized by CPU architecture, number of
+CPU consumption is given relative to the total available CPU processing
+capabilities (typically characterized by CPU architecture, number of
 cores, and speed). Here olsr2 showed significantly highest CPU usage
-(consuming about 10\% of the total availabe CPU capacities and about
+(consuming about 10\% of the total available CPU capacities and about
 10 time more compared to other protocols). However, it should be noted
 that the olsr2 code from olsr.org is still under heavy development,
 probably containing many CPU-consuming debug code that will be cleaned
@@ -441,7 +441,7 @@ usage.
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.8\textwidth]{\selection/top_VSZ.pdf}
-\caption{Protocol memory consumpion over time}
+\caption{Protocol memory consumption over time}
 \label{fig:mem}
 \end{figure}
 
@@ -457,7 +457,7 @@ usage.
 
 
 The analysis of established path characteristics as probed using the
-ping6 tool is analyzed from different persepctives in Figures
+ping6 tool is analyzed from different perspectives in Figures
 \ref{fig:ptim}, \ref{fig:prvh}, and \ref{fig:prtt} respectively. 
 
 Figure \ref{fig:ptim} shows the resulting RTT and involved hops for
@@ -486,7 +486,7 @@ routing protocols may react to the new interference conditions (as
 perceived by decreasing link qualities especially for long-distant
 links) with some delay by routing traffic over a new end-to-end path,
 using more hops but short-distant links.  Once the netperf probes and
-related interference finishes, the protocols converge back to pathes
+related interference finishes, the protocols converge back to paths
 with less hops but links covering longer distances.
 
 \begin{figure}[!ht]
@@ -519,13 +519,13 @@ whole 200 seconds measurement...
 
 \subsection{TCP throughput}
 
-Figure \ref{fig:netperf} shows the TCP troughput, measured successively
+Figure \ref{fig:netperf} shows the TCP throughput, measured successively
 for each protocol and round...
 
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.7\textwidth]{\selection/netperf_TP.pdf}
-\caption{TCP troughput, measured successively for each protocol and round}
+\caption{TCP throughput, measured successively for each protocol and round}
 \label{fig:netperf}
 \end{figure}
 
@@ -568,7 +568,7 @@ for each protocol and round...
 \subsection{Summary}
 Given the few number of measurements and the high amount of randomness
 involved, the results gathered during this measurement campaign are by
-no means representive. Looking at all perfromed measurements, as given
+no means representative. Looking at all performed measurements, as given
 in Tables \ref{tbl:s-pings} to \ref{tbl:m4}, a general ranking of
 protocols can only be done regarding some few and particular
 characteristics. For other, if at all, at most some vague tendencies
@@ -580,27 +580,27 @@ OLSR showed varying and in average medium results for measured path
 throughput, RTT, and total packet loss (the four performed throughput
 measurements showed it in all positions, from best- to least-well
 performing protocol). Its observed CPU and memory consumption was
-always notable low.  Regarding protcol-traffic overhead, it typically
-ranged within the most expensive (bandwidth consuming) protocls.
+always notable low.  Regarding protocol-traffic overhead, it typically
+ranged within the most expensive (bandwidth consuming) protocols.
 
 OLSR2 also showed varying and in average medium results for measured
 path throughput, RTT, and total packet loss (OLSR2 driven path
 throughput was typically lowest but once notable high). Its observed
 CPU and memory consumption was always notably higher than any other
-protocol.  Regarding protcol-traffic overhead, it showed average cost
+protocol.  Regarding protocol-traffic overhead, it showed average cost
 (bandwidth consuming more than bmx6 but less than olsr and batman advanced).
 
 BMX6 showed rather good results for measured path throughput, RTT, and
 total packet loss (all four throughput measurements resulted in first
 or second position). Its observed CPU and memory consumption showed
-average cost.  Regarding protcol-traffic overhead, it always showed
+average cost.  Regarding protocol-traffic overhead, it always showed
 least cost.
 
 Batman advance also showed varying and in average medium results for
 measured path throughput, RTT, and total packet loss. Memory and CPU
-usage could not be measured. Regarding protcol-traffic overhead, it
+usage could not be measured. Regarding protocol-traffic overhead, it
 typically ranged within the most expensive (bandwidth consuming)
-protocls.
+protocols.
 
 
 

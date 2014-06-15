@@ -30,13 +30,17 @@ echo ${LINE}
 ## we have also noticed differences in the filter
 ## e.g. in previous verisions a "," after ${INTERVAL}, was needed for the total
 if \
-    tshark -v | grep -e "^TShark 1\.8.." >/dev/null 2>&1 ||\
-    tshark -v | grep -e "^TShark 1\.6.." >/dev/null 2>&1   \
-; then
+    tshark -v | grep -e "^TShark 1\.6.." >/dev/null 2>&1 \
+    ; then
 
     tshark -r ${INFILE} -q -z "io,stat,${INTERVAL},,udp.port==698,udp.port==6240,vlan.etype==0x4305 && data.data[0]==00,udp.port==6696,udp.port==269" \
 	| tail -n +17 | head -n -1 | cut -d'>' -f 2- | tr -d '|' | sed "s/ 0 / NA /g"
 
+elif \
+    tshark -v | grep -e "^TShark 1\.8.." >/dev/null 2>&1 \
+    ;then
+
+    echo "your tshark version creates too strange output"
 
 else
     tshark -r ${INFILE} -q -z "io,stat,${INTERVAL},udp.port==698,udp.port==6240,vlan.etype==0x4305 && data.data[0]==00,udp.port==6696,udp.port==269" \

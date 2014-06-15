@@ -352,6 +352,8 @@ seconds before the end of each 200seconds lasting measurement.
 
 \subsection{Discussion of Measurement Results}
 
+\newcommand{\selection}{test_data/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-f41ab0/wbm-axn} 
+
 In the following the results of only one performed measurement are
 discussed in more detail. Therefore the last measurement, as summarized
 via graphs in Table \ref{tbl:s4}, was selected simply beacause it
@@ -363,10 +365,89 @@ particular characteristics while for other, given the few number of
 measurements and the high amount of randomness involved, at most some
 vague tendencies may be guessed.
 
-The protocol traffic overhead in terms of
+The protocol-traffic overhead in terms of bytes per second is given in
+Figure \ref{fig:traffic-ovhd-bytes}.  The continuous lines are
+presenting the measured overhead over time with a one-second
+resolution and the dashed lines the average overhead captured by the
+source node over the 200-seconds measurement period. It should be
+noted that the captured traffic includes all received protocol
+traffic, the traffic created by the capturing node itself as well as
+the traffic created by neighboring nodes (being in transmission range
+of the capturing node). Only pure protocol-traffic was considered (not
+user-data related traffic) as created by each protocol to detect and
+establish the routing inside the network. For batman-advanced,
+encapsulating user traffic inside the same ethernat frame type as used
+for protocol traffic, special filtering rules were used for
+differentiation.
+From this measurement it can be seen that highest average overhead was
+created by batman-advanced and olsr. Significantly less overhead
+(about one third) was captured for by bmx6. And overhead due to olsr2
+somewhere between. In fact, a similar byte-overhead related ranking can
+be observed in all other mobile and stationary scenarios.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.8\textwidth]{\selection/tcpdump_B.pdf}
+\caption{Protocol traffic overhead in bytes/second over time}
+\label{fig:traffic-ovhd-packets}
+\end{figure}
 
 
 
+Protocol-traffic overhead in terms of packets per second is given in
+Figure \ref{fig:traffic-ovhd-packets}. Here batman advanced showed
+significantly more (in the order of x10) created packets per second
+than all other protocols. Allowing the conclusion that batman-advanced
+packet size must be rather small compared to other protocols. Least
+amount of packets were captured from olsr. Thus, olsr packets must be
+quite big given the similar amount of bytes-per-second overhead that
+the olsr and batadv protocols created. Also this ranking repeats in
+all other measurements.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.8\textwidth]{\selection/tcpdump_P.pdf}
+\caption{Protocol traffic overhead in packets/second over time}
+\label{fig:traffic-ovhd-bytes}
+\end{figure}
+
+
+
+Memory and CPU consumption over time are given in Figure \ref{fig:mem}
+and \ref{fig:cpu} respectively. Both characteristics are not captured
+for batman advanced, which, running in kernel space, does not allow an
+easy profiling of this data. It can be seen that none of the captured
+protocols changed its memory requirements during this (nor any later)
+measurement. Also, the observed differences seem rather marginal
+(lowest seen for olsr with about 1.15MBytes and highest for olsr2 with
+about 1.7 MBytes) compared to the total available memory of 128 MBytes.
+
+CPU consumtion is given relative to the total available CPU processing
+capabilies (typically characterized by CPU architecture, number of
+cores, and speed). Here olsr2 showed significantly highest CPU usage
+(consuming about 10\% of the total availabe CPU capacities and about
+10 time more compared to other protocols). However, it should be noted
+that the olsr2 code from olsr.org is still under heavy development,
+probably containing many CPU-consuming debug code that will be cleaned
+up in later versions. In fact, as stated by olsr2 developers, it was
+the first time this code was tested in a real and reasonable diverse
+testbed environment. It is also interesting (even strange) that for
+two of the total of 8 measurements olsr2 showed only about 4\% CPU
+usage.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.8\textwidth]{\selection/top_VSZ.pdf}
+\caption{Protocol memory consumpion over time}
+\label{fig:mem}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.8\textwidth]{\selection/top_100CPU.pdf}
+\caption{Protocol CPU consumption (relative to total system CPU) over time}
+\label{fig:cpu}
+\end{figure}
 
 % wget http://downloads.battlemesh.org/WBMv6/geographical_map1.png
 % wget http://downloads.battlemesh.org/WBMv6/geographical_map2.png

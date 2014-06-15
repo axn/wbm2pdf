@@ -449,6 +449,77 @@ usage.
 \label{fig:cpu}
 \end{figure}
 
+
+The analysis of established path characteristics as probed using the
+ping6 tool is analyzed from different persepctives in Figures
+\ref{fig:ptim}, \ref{fig:prvh}, and \ref{fig:prtt} respectively. 
+
+Figure \ref{fig:ptim} shows the resulting RTT and involved hops for
+the established end-to-end path of each protocol over time (Hops given
+for batman-advanced are incorrect due to its layer-2 routing).
+
+It can be seen that the path (in terms of hops) changed various times
+for olsr and bmx6, choosing pathes with 2 to 6 hops, despite the fixed
+locations of nodes in this experiment. On the other hand, the olsr2
+path seemed quite constant, choosing a continuous three-hop path most
+of the time which (as can be seen from later discussed Figures
+\ref{fig:prtt} and \ref{fig:tp} also lead to the best measured
+performance). As expected, the RTT shows smaller values for less hops
+and higher latencies for more hops. The tendency of olsr2 choosing
+pathes with less hops repeats in other stationary measurements. So
+does the tendency of olsr and bmx6 for more frequent path changes and
+choosing pathes with more hops. It can also be noted (especially by
+looking also at graphs from the other stationary measurements) that
+path length of olsr and bmx6 often starts and ends with less hops than
+observed for the majority and in-between time of the measurement
+duration.  This phenomenon may be caused by the rather heavy
+interference introduced by the parallel netperf measurement which,
+starting roughly at the same time than the ping measurement, last only
+160 seconds (4 rounds, 4 protocols, 10 seconds). As a consequence,
+routing protocols may react to the new interference conditions (as
+perceived by decreasing link qualities especially for long-distant
+links) with some delay by routing traffic over a new end-to-end path,
+using more hops but short-distant links.  Once the netperf probes and
+related interference finishes, the protocols converge back to pathes
+with less hops but links covering longer distances.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.7\textwidth]{\selection/s1tim.pdf}
+\caption{Observed path RTTs and hops over time }
+\label{fig:ptim}
+\end{figure}
+
+Figure \ref{fig:prvh} shows the distribution of observed path hops.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.7\textwidth]{\selection/s1rvh.pdf}
+\caption{Observed path RTTs and probing occurances over time }
+\label{fig:prvh}
+\end{figure}
+
+Figure \ref{fig:prtt} shows the ECDF of the observed RTTs during the
+whole 200 seconds measurement. 
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.7\textwidth]{\selection/s1rtt.pdf}
+\caption{ECDF of success rates over RTT}
+\label{fig:prtt}
+\end{figure}
+
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.7\textwidth]{\selection/netperf_TP.pdf}
+\caption{TCP troughput, measured successively for each protocol and round}
+\label{fig:prtt}
+\end{figure}
+
+
+
+
 % wget http://downloads.battlemesh.org/WBMv6/geographical_map1.png
 % wget http://downloads.battlemesh.org/WBMv6/geographical_map2.png
 %\begin{figure}[!ht]

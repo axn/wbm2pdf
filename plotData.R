@@ -113,7 +113,7 @@ if("netperf" %in% testsNames) {
       ## empty column to make room for legend; as a consequence xlab must also be faked
       barplot(as.matrix(cbind(data[,dataNames],NA)), main = "netperf test", names.arg = c(protosNames,""), ylab = "Throughput [KB/s]", legend.text = roundsText, args.legend = list("topleft",bty = "n",cex=0.8), beside = TRUE) ## todo fix ylim shortness
       
-      for(i in 1:length(dataNames)){lines(par('usr')[1:2], rep(mean(data[,dataNames[i]],na.rm = TRUE),2), type="l", lty = 2, col=protoColours[i])} ## TODO fix colour mess
+      for(i in 1:length(dataNames)){lines(c(par('usr')[1], par('usr')[2]*((length(dataNames)-1)/length(dataNames))), rep(mean(data[,dataNames[i]],na.rm = TRUE),2), type="l", lty = 2, col=protoColours[i])} ## TODO fix colour mess
       dev.off()
       
       ## TIME

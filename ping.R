@@ -137,8 +137,8 @@ rttVsHops <- function (S,D) {
     p=p+1
   }
   axis(4)
-  mtext("Frequency",side=4,line=3)
-  legend("topright", title="Frequency", bty="n", allProtocols, fill=colors, cex=0.8)
+  mtext("Occurance",side=4,line=3)
+  legend("topright", title="Occurance", bty="n", allProtocols, fill=colors, cex=0.8)
   
 }
 

@@ -19,6 +19,7 @@ wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-e61936.t
 wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-f41ab0.tar.gz \
 "
 
+
 #Broken Crossed streams tests (dead daemons):
 #URLDATA="$URLDATA \
 #wbmv7-axn-17_2014-05-16_20-13-20/wbmv7-axn-17_2014-05-16_20-13-20_wibed-8a417e.tar.gz \
@@ -47,6 +48,7 @@ for D in $URLDATA; do
 	cd       test_data/$EXPDIR/$NODEDIR && \
 	( [ -f $NODETGZ ] || wget -c $URLBASE/$D ) && \
 	( [ -d ./$SAVEDIR ] || tar -xzvf $NODETGZ ) && \
+	( mv $(find | grep "$SAVEDIR$") . || true) && \
 	cd ./$SAVEDIR \
 	; then
 

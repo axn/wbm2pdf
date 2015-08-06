@@ -16,7 +16,7 @@ warning <- function(msgs="") {
 
 helpText <- function(){
   cat('Syntax 
-  ./$0 [[--args] arguments]
+  ', paste('./', thisScript, sep=""), '[[--args] arguments]
     "--args" is to separate the R options form the script arguments
     lists are of the form "element1 element2 ..."
 Arguments:
@@ -29,7 +29,7 @@ Arguments:
   --decorate=TRUE|FALSE - add legends; default: TRUE (TODO: extend to other fields? or remove opt?)
   --help   - print this text
 Example:
-  ./$0 [--args --tests="netperf top" --protos="olsr1 bmx"] \n')
+  ', paste('./', thisScript, sep=""), '--args --tests="netperf top" --protos="olsr1 bmx"\n')
 }
 
 
@@ -53,11 +53,12 @@ argsL <- as.list(as.character(argsDF$V2))
 names(argsL) <- argsDF$V1
 
 #### default values
+## tests
 if(is.null(argsL$tests)) { testsNames <- "all"
 } else {
   testsNames <- strsplit(argsL$tests, " ")[[1]] ## [[1]] to extract the first element of the list, which is a vector
 }
-if(FALSE %in% { testsNames %in% c(knownTests, "all") }){ print("ERROR: Unknow test."); helpText(); quit(save = "no") }
+if(FALSE %in% { testsNames %in% c(knownTests, "all") }){ error(msg="Unknow test.") }
 if("all" %in% testsNames) { testsNames <- knownTests }
 
 ## protos
@@ -65,12 +66,12 @@ if(is.null(argsL$protos)) { protosNames <- "all"
 } else {
   protosNames <- strsplit(argsL$proto, " ")[[1]]
 }
-if(FALSE %in% { protosNames %in% c(knownProtocols, "all") }){ print("WARNING: Unknow protocol.")}
+if(FALSE %in% { protosNames %in% c(knownProtocols, "all") }){ warning(msg="Unknow protocol.") }
 if("all" %in% protosNames) { protosNames <- knownProtocols }
 
 ## colours
 if(!is.null(argsL$colours)) { protoColours <- replace(protoColours, 1:length(strsplit(argsL$colours, " ")[[1]]), strsplit(argsL$colours, " ")[[1]]) }
-if(FALSE %in% { protoColours %in% colours() }){ print("ERROR: Unknow colour. See colours() in R."); quit(save = "no") }
+if(FALSE %in% { protoColours %in% colours() }){ error(msg="Unknow colour. See colours() in R."); quit(save = "no") }
 
 if(!is.null(argsL$dataext)) { dataext <- argsL$dataext}
 if(!is.null(argsL$indir)) { indir <- argsL$indir}

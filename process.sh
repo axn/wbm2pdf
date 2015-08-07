@@ -47,8 +47,7 @@ for D in $URLDATA; do
 	mkdir -p test_data/$EXPDIR/$NODEDIR && \
 	cd       test_data/$EXPDIR/$NODEDIR && \
 	( [ -f $NODETGZ ] || wget -c $URLBASE/$D ) && \
-	( [ -d ./$SAVEDIR ] || tar -xzvf $NODETGZ ) && \
-	( mv $(find | grep "$SAVEDIR$") . || true) && \
+	( [ -d ./$SAVEDIR ] || ( tar -xzvf $NODETGZ && mv $(find | grep "$SAVEDIR$") . ) ) && \
 	cd ./$SAVEDIR \
 	; then
 
@@ -62,18 +61,18 @@ for D in $URLDATA; do
 	fi
 
 	if [ "$NETPERF" == "YES" ]; then
-	    ../../../../netperf.sh > netperf.data
-	    ../../../../plotData.R  --vanilla --args --tests="netperf" --protos="olsr1 bmx batadv olsr2"
+	    ../../../../netperf.sh > netperf.data && \
+		../../../../plotData.R  --vanilla --args --tests="netperf" --protos="olsr1 bmx batadv olsr2"
 	fi
 
 	if [ "$TOP" == "YES" ]; then
-	    ../../../../top.sh > top.data
-	    ../../../../plotData.R  --vanilla --args --tests="top" --protos="olsr1 bmx batadv olsr2"
+	    ../../../../top.sh > top.data && \
+		../../../../plotData.R  --vanilla --args --tests="top" --protos="olsr1 bmx batadv olsr2"
 	fi
 
 	if [ "$TCPDUMP" == "YES" ]; then
-	    ../../../../tcpdump.sh > tcpdump.data
-	    ../../../../plotData.R  --vanilla --args --tests="tcpdump" --protos="olsr1 bmx batadv olsr2"
+	    ../../../../tcpdump.sh > tcpdump.data && \
+		../../../../plotData.R  --vanilla --args --tests="tcpdump" --protos="olsr1 bmx batadv olsr2"
 	fi
 
 

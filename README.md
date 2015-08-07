@@ -30,3 +30,26 @@ To clean all data:
 cd tex
 make clean_data
 </pre>
+
+## Data ##
+
+### Source ###
+http://Server/results/ExperimentID/ExperimentID_wibed-NodeID.tar.gz
+e.g. http://wibed.confine-project.eu/results/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-f41ab0.tar.gz
+
+### Experiments and nodes selection ###
+file: process.sh 
+variable: URLDATA
+
+## ping sample ###
+<pre>
+PING fdba:12:1ab0::1(fdba:12:1ab0::1) 400 data bytes
+408 bytes from fdba:12:1ab0::1: icmp_seq=1 ttl=62 time=7.07 ms
+408 bytes from fdba:12:1ab0::1: icmp_seq=2 ttl=62 time=92.1 ms
+...
+...
+...
+--- fdba:12:1ab0::1 ping statistics ---
+199 packets transmitted, 198 received, 0% packet loss, time 199081ms
+rtt min/avg/max/mdev = 4.757/147.583/1057.819/227.404 ms, pipe 2
+<\pre>

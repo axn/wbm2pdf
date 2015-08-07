@@ -1,26 +1,23 @@
-
 docname = wbmv7
-figures = figures/*.png # figures/*.pdf figures/*.svg
 rawUrl = http://wibed.confine-project.eu/resultsdir
 saveDir = wbm-axn
 
-
-$(docname).pdf : $(docname).tex $(figures) autofig outline.sty
+$(docname).pdf : $(docname).tex figures/battlemeshv7.png autofig outline.sty
 	pdflatex $(docname).tex && pdflatex $(docname).tex
 	echo
 
-
-$(figures) : 
-	mkdir -p figures && cd figures && wget -cO battlemeshv7.png http://battlemesh.org/moin_static196/common/battlemeshv7.png
+figures/battlemeshv7.png:
+	mkdir -p figures && \
+		wget -cO figures/battlemeshv7.png -U 'anything' "http://battlemesh.org/EndorsementTemplate?action=AttachFile&do=get&target=wbmv7.png"
 
 autofig : process.sh ping.R ping.lua
 	./process.sh YES YES YES YES #ping, netperf, top, overhead
 
 clean_data : 
-	rm -f test_data
+	rm -rf test_data
 
 clean_figures :
-	rm -f $(figures)
+	rm -rf figures
 
 clean_tex:
 	rm -f $(docname).pdf $(docname).log $(docname).out $(docname).aux $(docname).toc 

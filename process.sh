@@ -7,7 +7,7 @@ TCPDUMP=${4:-YES}
 
 HOMEDIR="$(pwd)"
 SAVEDIR="wbm-axn"
-URLBASE=http://wibed.confine-project.eu/resultsdir
+URLBASE=http://wibed.confine-project.eu/results
 
 URLDATA=""
 

@@ -35,13 +35,16 @@ make clean_data
 
 ### Source ###
 http://Server/results/ExperimentID/ExperimentID_wibed-NodeID.tar.gz
+
 e.g. http://wibed.confine-project.eu/results/wbmv7-axn-16_2014-05-16_19-28-43/wbmv7-axn-16_2014-05-16_19-28-43_wibed-f41ab0.tar.gz
 
 ### Experiments and nodes selection ###
+
 file: process.sh 
+
 variable: URLDATA
 
-## ping sample ###
+### ping sample ####
 <pre>
 PING fdba:12:1ab0::1(fdba:12:1ab0::1) 400 data bytes
 408 bytes from fdba:12:1ab0::1: icmp_seq=1 ttl=62 time=7.07 ms
